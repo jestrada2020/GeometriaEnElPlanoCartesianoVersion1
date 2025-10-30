@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Square Root Positioning</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            line-height: 2;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .baseline-guide {
+            border-bottom: 1px solid red;
+            display: inline-block;
+            width: 100%;
+            position: relative;
+        }
+        .test-line {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Square Root Symbol Positioning Test</h1>
+    
+    <div class="test-section">
+        <h2>Before Adjustment (Reference)</h2>
+        <p>This shows how the square root symbols should align with regular text.</p>
+        <div class="baseline-guide">
+            <div class="test-line">Regular text with <span class="sqrt-simple">x² + y²</span> and normal text after</div>
+            <div class="test-line">Regular text with <span class="sqrt-symbol">a² + b²</span> and normal text after</div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Circle Formula</h2>
+        <p>Ecuación: <span class="sqrt-symbol">(x-h)² + (y-k)²</span> = r</p>
+        <p>Radio: r = <span class="sqrt-simple">(x-h)² + (y-k)²</span></p>
+    </div>
+
+    <div class="test-section">
+        <h2>Distance Formula</h2>
+        <p>d = <span class="sqrt-symbol">(x₁ - x₀)² + (y₁ - y₀)²</span></p>
+        <p>La distancia entre dos puntos es: <span class="sqrt-simple">(x₁ - x₀)² + (y₁ - y₀)²</span></p>
+    </div>
+
+    <div class="test-section">
+        <h2>Ellipse Formula</h2>
+        <p>d₁ + d₂ = 2a donde d₁ = <span class="sqrt-symbol">(x-c)² + y²</span> y d₂ = <span class="sqrt-symbol">(x+c)² + y²</span></p>
+    </div>
+
+    <div class="test-section">
+        <h2>Hyperbola Formula</h2>
+        <p>|d₁ - d₂| = 2a donde d₁ = <span class="sqrt-symbol">(x-c)² + y²</span> y d₂ = <span class="sqrt-symbol">(x+c)² + y²</span></p>
+    </div>
+
+    <div class="test-section">
+        <h2>Mixed Text Sizes</h2>
+        <div style="font-size: 14px;">Small: <span class="sqrt-symbol">x² + y²</span> = r²</div>
+        <div style="font-size: 16px;">Normal: <span class="sqrt-symbol">x² + y²</span> = r²</div>
+        <div style="font-size: 18px;">Large: <span class="sqrt-symbol">x² + y²</span> = r²</div>
+        <div style="font-size: 20px;">XLarge: <span class="sqrt-symbol">x² + y²</span> = r²</div>
+    </div>
+
+    <div class="test-section">
+        <h2>Alignment Test</h2>
+        <p style="border-top: 1px solid blue; border-bottom: 1px solid blue; padding: 5px 0;">
+            The square root <span class="sqrt-symbol">x² + y²</span> should align properly within these blue lines and not extend above the top line.
+        </p>
+        <p style="border-top: 1px solid green; border-bottom: 1px solid green; padding: 5px 0;">
+            Another test: <span class="sqrt-simple">a² + b²</span> should also stay within the green boundaries.
+        </p>
+    </div>
+</body>
+</html>

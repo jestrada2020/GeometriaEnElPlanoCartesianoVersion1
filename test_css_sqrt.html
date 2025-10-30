@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS-Based Sqrt Test</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>CSS-Based Square Root Test</h1>
+        
+        <div class="alert alert-success">
+            <strong>✅ New Approach:</strong> Using CSS-based square root symbols instead of LaTeX for better reliability.
+        </div>
+        
+        <!-- Test 1: Circle Definition -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Circle Definition - CSS Sqrt</h3>
+            </div>
+            <div class="card-body">
+                <div class="circle-tool">
+                    <h4>Definición como lugar geométrico:</h4>
+                    <p class="mb-3">Se llama círculo al lugar geométrico de todos los puntos P(x,y) que se mueven en 
+                    el plano, de forma que su distancia a un punto fijo C(h,k) (llamado centro) es siempre constante. 
+                    La constante se llama radio r > 0.</p>
+                    
+                    <div class="math-equation mb-3">
+                        <strong>Definición formal:</strong> 
+                        <div class="math-equation">d(P,C) = r</div>
+                        <div class="math-equation"><span class="sqrt-symbol">(x-h)² + (y-k)²</span> = r</div>
+                    </div>
+                    
+                    <p><strong>Ecuación estándar:</strong></p>
+                    <div class="math-equation">
+                        (x-h)² + (y-k)² = r²
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test 2: Ellipse Definition -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Ellipse Definition - CSS Sqrt</h3>
+            </div>
+            <div class="card-body">
+                <div class="ellipse-tool">
+                    <h4>Definición como lugar geométrico:</h4>
+                    <p class="mb-3">Se llama elipse al lugar geométrico de todos los puntos P(x,y) que se mueven en 
+                    el plano, tal que la suma de las distancias de P(x,y) a dos puntos fijos F₁ y F₂ (llamados focos) es constante.</p>
+                    
+                    <div class="math-equation mb-3">
+                        <strong>Definición formal:</strong> 
+                        <div class="math-equation">d(P,F₁) + d(P,F₂) = 2a</div>
+                        <div class="math-equation"><span class="sqrt-symbol">(x-h+c)² + (y-k)²</span> + <span class="sqrt-symbol">(x-h-c)² + (y-k)²</span> = 2a</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test 3: Hyperbola Definition -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Hyperbola Definition - CSS Sqrt</h3>
+            </div>
+            <div class="card-body">
+                <div class="hyperbola-tool">
+                    <h4>Definición como lugar geométrico:</h4>
+                    <p class="mb-3">Se llama hipérbola al lugar geométrico de todos los puntos P(x,y) que se mueven en 
+                    el plano, tal que la diferencia absoluta de las distancias de P(x,y) a dos puntos fijos F₁ y F₂ (llamados focos) es constante.</p>
+                    
+                    <div class="math-equation mb-3">
+                        <strong>Definición formal:</strong> 
+                        <div class="math-equation">|d(P,F₁) - d(P,F₂)| = 2a</div>
+                        <div class="math-equation">|<span class="sqrt-symbol">(x-h+c)² + (y-k)²</span> - <span class="sqrt-symbol">(x-h-c)² + (y-k)²</span>| = 2a</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test 4: Various Sqrt Styles -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Various Sqrt Styles Comparison</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Simple Sqrt (.sqrt-simple)</h5>
+                        <p>Inline: <span class="sqrt-simple">x² + y²</span></p>
+                        <p>In equation: La distancia es <span class="sqrt-simple">a² + b²</span></p>
+                        <div class="math-equation">
+                            <span class="sqrt-simple">x² + y² + z²</span> = r
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Symbol Sqrt (.sqrt-symbol)</h5>
+                        <p>Inline: <span class="sqrt-symbol">x² + y²</span></p>
+                        <p>In equation: La distancia es <span class="sqrt-symbol">a² + b²</span></p>
+                        <div class="math-equation">
+                            <span class="sqrt-symbol">x² + y² + z²</span> = r
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test 5: Dynamic Conversion -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Dynamic Conversion Test</h3>
+            </div>
+            <div class="card-body">
+                <button class="btn btn-primary mb-3" onclick="testConversion()">Convert LaTeX to CSS</button>
+                <div id="conversion-test">
+                    <p>Before conversion: $$\sqrt{x^2 + y^2}$$ = r</p>
+                    <p>Mixed format: sqrt{a^2 + b^2} and \sqrt{c^2 + d^2}</p>
+                    <p>Parentheses: sqrt(x^2 + y^2)</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Status -->
+        <div class="alert alert-info">
+            <h4>✅ Advantages of CSS-Based Sqrt:</h4>
+            <ul class="mb-0">
+                <li><strong>No MathJax dependency:</strong> Works immediately without waiting for LaTeX processing</li>
+                <li><strong>Consistent rendering:</strong> Same appearance across all browsers</li>
+                <li><strong>No escaping issues:</strong> No need to worry about backslash escaping</li>
+                <li><strong>Fast loading:</strong> No external library processing required</li>
+                <li><strong>Easy styling:</strong> Can be customized with CSS</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Load the JavaScript functions -->
+    <script src="js/script1.js"></script>
+    
+    <script>
+        function testConversion() {
+            const testDiv = document.getElementById('conversion-test');
+            
+            if (window.app && window.app.convertSqrtToCSS) {
+                console.log('Converting LaTeX sqrt to CSS...');
+                const originalContent = testDiv.innerHTML;
+                const convertedContent = window.app.convertSqrtToCSS(originalContent);
+                testDiv.innerHTML = convertedContent;
+                console.log('Conversion complete:', originalContent, '->', convertedContent);
+            } else {
+                console.error('Conversion function not available');
+            }
+        }
+        
+        // Auto-test after page load
+        window.addEventListener('load', function() {
+            console.log('CSS-based sqrt test page loaded');
+            console.log('App object available:', typeof window.app !== 'undefined');
+        });
+    </script>
+</body>
+</html>

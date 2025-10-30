@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Simple GeoGebra</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Test Simple: GeoGebra Integration</h1>
+        
+        <div class="alert alert-info">
+            <strong>Test:</strong> Click the button below to load the GeoGebra tool and verify it works correctly.
+        </div>
+        
+        <button class="btn btn-primary btn-lg mb-4" onclick="loadGeoGebra()">
+            <i class="fas fa-compass me-2"></i> Load GeoGebra Tool
+        </button>
+        
+        <div id="status" class="alert alert-secondary">
+            Ready to test...
+        </div>
+        
+        <!-- Tool content area -->
+        <div id="tool-content" class="tool-container">
+            <!-- Content will be loaded here -->
+        </div>
+    </div>
+
+    <script src="js/script1.js"></script>
+    <script>
+        function loadGeoGebra() {
+            const status = document.getElementById('status');
+            
+            try {
+                status.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Loading GeoGebra tool...';
+                status.className = 'alert alert-info';
+                
+                // Load the tool
+                app.loadTool('g_Geogebra');
+                
+                // Check result after a brief delay
+                setTimeout(() => {
+                    const content = document.getElementById('tool-content');
+                    if (content.innerHTML.includes('GeoGebra Clásico')) {
+                        status.innerHTML = '<i class="fas fa-check-circle me-2"></i>✅ GeoGebra tool loaded successfully!';
+                        status.className = 'alert alert-success';
+                        
+                        // Count the number of external links
+                        const links = content.querySelectorAll('a[target="_blank"]');
+                        status.innerHTML += `<br><small>Found ${links.length} external GeoGebra links.</small>`;
+                        
+                        // Test if icons are rendered
+                        const icons = content.querySelectorAll('.fas');
+                        status.innerHTML += `<br><small>Found ${icons.length} Font Awesome icons.</small>`;
+                        
+                    } else {
+                        status.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>❌ Failed to load GeoGebra content';
+                        status.className = 'alert alert-danger';
+                    }
+                }, 500);
+                
+            } catch (error) {
+                status.innerHTML = `<i class="fas fa-times-circle me-2"></i>❌ Error: ${error.message}`;
+                status.className = 'alert alert-danger';
+            }
+        }
+        
+        // Log app availability
+        window.addEventListener('load', () => {
+            const status = document.getElementById('status');
+            if (typeof app !== 'undefined') {
+                status.innerHTML = '✅ App object loaded successfully. Ready to test GeoGebra integration.';
+                status.className = 'alert alert-success';
+            } else {
+                status.innerHTML = '❌ App object not found. Check if script1.js is loaded correctly.';
+                status.className = 'alert alert-danger';
+            }
+        });
+    </script>
+</body>
+</html>

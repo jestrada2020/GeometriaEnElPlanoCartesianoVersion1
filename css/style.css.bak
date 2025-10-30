@@ -1,0 +1,661 @@
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; display: flex; background-color: #f8f9fa; }
+        #sidebar { 
+        width: 280px; 
+        background-color: #343a40; /* Darker sidebar */
+        color: white;
+        padding: 20px; 
+        height: 100vh; 
+        position: fixed;
+        left: 0;
+        top: 0;
+        overflow-y: auto;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+    #sidebar h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #495057;
+    padding-bottom: 0.75rem;
+    }
+    #sidebar ul { list-style: none; padding: 0; }
+    #sidebar li { margin-bottom: 0.5rem; }
+    #sidebar button {
+        width: 100%;
+        padding: 0.85rem 1rem; /* Increased padding */
+        border: none;
+        border-radius: 0.375rem; /* Bootstrap's default rounded corners */
+        background: #495057; /* Slightly lighter than sidebar bg */
+        color: white;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        font-weight: 500;
+        text-align: left; /* Align text to the left */
+    }
+    #sidebar button:hover, #sidebar button.active {
+        background: #007bff; /* Bootstrap primary blue */
+        transform: translateX(5px);
+    }
+
+    #content { 
+        margin-left: 280px; /* Same as sidebar width */
+        flex-grow: 1; 
+        padding: 30px;  /* Increased padding */
+        overflow-y: auto; /* Allow content to scroll if needed */
+        height: 100vh;
+    }
+    .tool-container { 
+        background-color: #fff; 
+        border: 1px solid #dee2e6; 
+        border-radius: 0.375rem; 
+        padding: 30px; /* Increased padding */
+        margin-top: 0; /* Removed top margin as content has padding */
+        box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+    }
+    
+    /* Common input styles */
+    .matrix-input input, .number-input, .operation-selector { 
+        width: 100%; 
+        padding: 0.5rem; 
+        border: 1px solid #ced4da; 
+        border-radius: 0.25rem; 
+        text-align: center; 
+        font-size: 1rem;
+        box-sizing: border-box; /* Important for width 100% */
+    }
+    /* Specific style for matrix entry cells in general */
+    .matrix-entry-cell {
+        width: 80px; /* Adjust as needed for fractions */
+        margin: 2px;
+    }
+    .matrix-input input { width: 80px; margin: 2px; } /* Specific to Gauss-Jordan if needed */
+
+
+    .gj-history { max-height: 200px; overflow-y: auto; }
+    .gj-card { margin-bottom: 1rem; }
+    .gj-matrix { font-size: 0.9em; white-space: pre-wrap; }
+    
+    .btn-primary { background-color: #007bff; border-color: #007bff; }
+    .btn-primary:hover { background-color: #0056b3; border-color: #0056b3; }
+    .btn-secondary { background-color: #6c757d; border-color: #6c757d; }
+    .btn-secondary:hover { background-color: #545b62; border-color: #545b62; }
+    .btn-warning { background-color: #ffc107; border-color: #ffc107; color: #212529; }
+    .btn-warning:hover { background-color: #e0a800; border-color: #d39e00; }
+    .btn-success { background-color: #28a745; border-color: #28a745; }
+    .btn-danger { background-color: #dc3545; border-color: #dc3545; }
+
+
+    /* Estilos específicos para la herramienta de determinantes */
+    :root {
+        --primary-color-det: #007bff;      /* Bootstrap primary */
+        --secondary-color-det: #6c757d;   /* Bootstrap secondary */
+        --warning-color-det: #ffc107;     /* Bootstrap warning */
+        --danger-color-det: #dc3545;      /* Bootstrap danger */
+        --border-color-det: #dee2e6;      /* Bootstrap border */
+        --background-light-det: #f8f9fa;  /* Bootstrap light background */
+    }
+
+    .determinant-tool .main-title { font-size: 1.8rem; font-weight: bold; text-align: center; margin-bottom: 2rem; color: #343a40; }
+    .determinant-tool .subtitle { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 1rem 0; color: #495057; border-bottom: 1px solid var(--border-color-det); padding-bottom: 0.5rem;}
+    
+    .determinant-tool .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 25px;
+    }
+
+    .determinant-tool .card { 
+        background: white; 
+        border-radius: 0.375rem; 
+        padding: 20px; 
+        border: 1px solid var(--border-color-det);
+        box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+    }
+
+    .matrix-grid-det { display: grid; gap: 0.5rem; margin: 1rem 0; }
+    .matrix-row-det { display: flex; gap: 0.5rem; justify-content: center; }
+    .matrix-cell-det { position: relative; min-width: 60px; max-width: 70px; } /* Adjusted width */
+    
+    .determinant-tool .button { 
+        display: inline-block; padding: 0.65rem 1rem; border: none; border-radius: 0.25rem; 
+        font-size: 0.95rem; cursor: pointer; transition: background-color 0.2s; 
+        text-align: center; width: 100%; margin: 0.5rem 0; color: white; font-weight: 500;
+    }
+    .button-primary-det { background-color: var(--primary-color-det); }
+    .button-primary-det:hover { background-color: #0056b3; }
+    .button-secondary-det { background-color: var(--secondary-color-det); }
+    .button-secondary-det:hover { background-color: #545b62; }
+    .button-warning-det { background-color: var(--warning-color-det); color: #212529; }
+    .button-warning-det:hover { background-color: #e0a800; }
+    .button-danger-det { background-color: var(--danger-color-det); }
+    .button-danger-det:hover { background-color: #b02a37; }
+
+
+    .process-section-det { margin-top: 20px; padding: 15px; background-color: var(--background-light-det); border-radius: 0.375rem; border: 1px solid var(--border-color-det); }
+    .latex-process-det { 
+        margin: 10px 0; padding: 20px; background-color: white; border-radius: 0.25rem; 
+        min-height: 150px; overflow-x: auto; border: 1px solid var(--border-color-det); 
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); font-size: 1.1em;
+    }
+    .operations-box-det { padding: 15px; background-color: var(--background-light-det); border-radius: 0.375rem; margin: 1rem 0; border: 1px solid var(--border-color-det); }
+    .operation-inputs-det { margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.75rem; }
+    .operation-inputs-det div { display: flex; flex-direction: column; } /* Stack label and select/input */
+    .operation-inputs-det label { margin-bottom: 0.25rem; font-weight: 500; font-size: 0.9em; }
+
+    .info-section-det { margin-top: 1.5rem; padding: 1rem; background-color: #e9ecef; border-radius: 0.25rem; border-left: 4px solid var(--primary-color-det); font-size: 0.9em;}
+    .properties-section-det { margin-top: 1.5rem; padding: 1rem; background-color: #e9ecef; border-radius: 0.25rem; }
+    .property-item-det { margin-bottom: 0.75rem; padding: 0.75rem; border-left: 3px solid var(--primary-color-det); background-color: white; border-radius: 0.25rem; }
+    .property-item-det p { margin-bottom: 0.25rem; font-size: 0.9em; }
+    .property-item-det strong { font-size: 0.95em; }
+    
+    .button:disabled { background-color: #ccc; cursor: not-allowed; }
+    .final-determinant-display {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background-color: #d1ecf1; /* Light blue for info */
+        border: 1px solid #bee5eb;
+        color: #0c5460; /* Darker blue text */
+        border-radius: 0.25rem;
+        font-weight: bold;
+        text-align: center;
+        font-size: 1.2em;
+    }
+    
+    /* Estilos para matrices */
+    .matrix-container {
+        margin: 1rem 0;
+    }
+    .latex-output {
+        margin-top: 1.5rem;
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 0.375rem;
+        border: 1px solid #dee2e6;
+        word-wrap: break-word; /* NUEVO: para que el LaTeX no se desborde tanto */
+        overflow-x: auto; /* NUEVO: scroll si es necesario */
+    }
+    
+    /* Estilos mejorados para visualización LaTeX */
+    .latex-output {
+        background-color: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        overflow-x: auto;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Mejoras específicas para la visualización de LaTeX y MathJax */
+    .latex-output .MathJax_Display {
+        margin: 1em 0 !important;
+        text-align: center !important;
+    }
+
+    .latex-output .MathJax {
+        font-size: 1.2em !important;
+        line-height: 1.4 !important;
+    }
+
+    /* Forzar re-renderizado correcto de MathJax */
+    .math-equation .MathJax_Display {
+        margin: 0.5em 0 !important;
+    }
+    
+    /* Estilos para Sistema de Rectas */
+    .sistema-rectas-tool {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        color: #212529;
+    }
+    
+    .sistema-rectas-tool .main-title {
+        color: #0d6efd;
+        margin-bottom: 20px;
+        text-align: center;
+        font-weight: bold;
+    }
+    
+    .sistema-rectas-tool .form-label {
+        font-weight: 500;
+        margin-bottom: 8px;
+    }
+    
+    .sistema-rectas-tool .canvas-container {
+        width: 100%;
+        height: 400px;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        background-color: white;
+        margin: 15px 0;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .sistema-rectas-tool .parameter-panel {
+        padding: 15px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        margin-bottom: 15px;
+    }
+    
+    .sistema-rectas-tool .results-panel {
+        padding: 15px;
+        background-color: #e9f2ff;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        margin-top: 15px;
+    }
+    
+    .sistema-rectas-tool .results-panel h4 {
+        color: #0d6efd;
+        margin-bottom: 10px;
+        font-size: 1.2rem;
+    }
+    
+    .sistema-rectas-tool .alert {
+        margin-top: 15px;
+    }
+        text-align: left !important;
+    }
+
+    /* Mejoras para las ecuaciones dinámicas */
+    #ecuacionCirculo, #ecuacionElipse, 
+    #coordenadasParametricas, #coordenadasParametricasElipse {
+        min-height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-family: inherit;
+    }
+    
+    /* Estilos para Sistema de Rectas */
+    .sistema-rectas-tool {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        color: #212529;
+    }
+    
+    .sistema-rectas-tool .main-title {
+        color: #0d6efd;
+        margin-bottom: 20px;
+        text-align: center;
+        font-weight: bold;
+    }
+    
+    .sistema-rectas-tool .card {
+        margin-bottom: 20px;
+        border-color: #0d6efd;
+    }
+    
+    .sistema-rectas-tool .card-header {
+        background-color: #0d6efd;
+        color: white;
+    }
+    
+    .sistema-rectas-tool .canvas-container {
+        position: relative;
+        margin: 20px auto;
+    }
+    
+    .sistema-rectas-tool .form-select {
+        margin-bottom: 20px;
+    }
+
+    /* Asegurar que las fórmulas matemáticas se procesen correctamente */
+    .math-equation .MathJax_CHTML {
+        text-align: left !important;
+    }
+
+    /* Mejorar espaciado en las definiciones matemáticas */
+    .math-equation {
+        padding: 20px;
+        margin: 15px 0;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 8px;
+        border-left: 4px solid #007bff;
+        line-height: 1.6;
+    }
+
+    .ellipse-tool .math-equation {
+        border-left-color: #28a745;
+    }
+
+    .hyperbola-tool .math-equation {
+        border-left-color: #dc3545;
+    }
+
+    /* Estilos específicos para casos matemáticos (begin{cases}) */
+    .MathJax .mo[fence="true"] {
+        font-size: 1.2em !important;
+    }
+
+    /* Forzar actualización de MathJax cuando sea necesario */
+    .latex-output.updating {
+        opacity: 0.7;
+        transition: opacity 0.3s ease;
+    }
+
+    .latex-output.updated {
+        opacity: 1;
+        transition: opacity 0.3s ease;
+    }
+
+    /* Estilos específicos para la herramienta del círculo */
+    .circle-tool .main-title {
+        color: #007bff;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .circle-tool .card {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: none;
+        border-radius: 10px;
+    }
+
+    .circle-tool .card-body {
+        padding: 20px;
+    }
+
+    .circle-tool #canvasCirculo {
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .circle-tool .form-range {
+        accent-color: #007bff;
+    }
+
+    .circle-tool .alert-info {
+        background-color: #e3f2fd;
+        border-color: #2196f3;
+        color: #0d47a1;
+    }
+
+    /* Estilos específicos para la herramienta de hipérbola */
+    .hyperbola-tool .main-title {
+        color: #dc3545;
+        border-bottom: 2px solid #dc3545;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .hyperbola-tool .card {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: none;
+        border-radius: 10px;
+    }
+
+    .hyperbola-tool .card-body {
+        padding: 20px;
+    }
+
+    .hyperbola-tool #canvasHiperbola {
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .hyperbola-tool .form-range {
+        accent-color: #dc3545;
+    }
+
+    .hyperbola-tool .alert-info {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        color: #721c24;
+    }
+
+    /* Estilos específicos para la herramienta de parábola vertical */
+    .parabola-vertical-tool .main-title {
+        color: #fd7e14;
+        border-bottom: 2px solid #fd7e14;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .parabola-vertical-tool .card {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: none;
+        border-radius: 10px;
+    }
+
+    .parabola-vertical-tool .card-body {
+        padding: 20px;
+    }
+
+    .parabola-vertical-tool #canvasParabolaVertical {
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .parabola-vertical-tool .form-range {
+        accent-color: #fd7e14;
+    }
+
+    .parabola-vertical-tool .alert-info {
+        background-color: #fff3cd;
+        border-color: #ffeaa7;
+        color: #856404;
+    }
+
+    .parabola-vertical-tool .math-equation {
+        border-left-color: #fd7e14;
+    }
+
+    /* Estilos específicos para la herramienta de parábola horizontal */
+    .parabola-horizontal-tool .main-title {
+        color: #6f42c1;
+        border-bottom: 2px solid #6f42c1;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .parabola-horizontal-tool .card {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: none;
+        border-radius: 10px;
+    }
+
+    .parabola-horizontal-tool .card-body {
+        padding: 20px;
+    }
+
+    .parabola-horizontal-tool #canvasParabolaHorizontal {
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .parabola-horizontal-tool .form-range {
+        accent-color: #6f42c1;
+    }
+
+    .parabola-horizontal-tool .alert-info {
+        background-color: #e2e3ff;
+        border-color: #c0c1ff;
+        color: #383d41;
+    }
+
+    .parabola-horizontal-tool .math-equation {
+        border-left-color: #6f42c1;
+    }
+
+    /* Mejoras para matrices */
+    .matrix-container {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+    }
+
+    .matrix-input {
+        width: 60px;
+        height: 40px;
+        text-align: center;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .matrix-input:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    /* Estilos para ecuaciones matemáticas */
+    .math-equation {
+        font-size: 1.2em;
+        padding: 15px;
+        margin: 10px 0;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 8px;
+        border-left: 4px solid #007bff;
+    }
+
+    /* Animaciones suaves */
+    .btn {
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Responsive design para pantallas pequeñas */
+    @media (max-width: 768px) {
+        .circle-tool #canvasCirculo {
+            width: 100%;
+            height: auto;
+            max-width: 500px;
+        }
+        
+        .latex-output {
+            font-size: 0.9em;
+        }
+        
+        .matrix-input {
+            width: 50px;
+            height: 35px;
+            font-size: 12px;
+        }
+    
+/* Estilos para Sistemas LN y NL */
+.sistema-rectas-tool {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    color: #212529;
+}
+
+.sistema-rectas-tool .main-title {
+    color: #0d6efd;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.sistema-rectas-tool .form-label {
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.sistema-rectas-tool .canvas-container {
+    width: 100%;
+    height: 400px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    background-color: white;
+    margin: 15px 0;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.sistema-rectas-tool .parameter-panel {
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 15px;
+}
+
+.sistema-rectas-tool .results-panel {
+    padding: 15px;
+    background-color: #e9f2ff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-top: 15px;
+}
+
+.sistema-rectas-tool .results-panel h4 {
+    color: #0d6efd;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.sistema-rectas-tool .alert {
+    margin-top: 15px;
+}
+    margin-top: 15px;
+}
+
+    /* Estilos específicos para la herramienta de la elipse */
+    .ellipse-tool .main-title {
+        color: #28a745;
+        border-bottom: 2px solid #28a745;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .ellipse-tool .card {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: none;
+        border-radius: 10px;
+    }
+
+    .ellipse-tool .card-body {
+        padding: 20px;
+    }
+
+    .ellipse-tool #canvasElipse {
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .ellipse-tool .form-range {
+        accent-color: #28a745;
+    }
+
+    .ellipse-tool .alert-info {
+        background-color: #d4edda;
+        border-color: #28a745;
+        color: #155724;
+    }
+
+    /* Arreglos para asegurar que los canvas se muestren correctamente */
+    #canvasCirculo, #canvasElipse, #canvasHiperbola, #canvasParabolaVertical, #canvasParabolaHorizontal {
+        display: block;
+        margin: 0 auto;
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Mejorar la visualización en dispositivos móviles */
+    @media (max-width: 768px) {
+        #canvasCirculo, #canvasElipse, #canvasHiperbola, #canvasParabolaVertical, #canvasParabolaHorizontal {
+            width: 100%;
+            height: 300px;
+        }
+        
+        .circle-tool .main-title,
+        .ellipse-tool .main-title,
+        .hyperbola-tool .main-title,
+        .parabola-vertical-tool .main-title,
+        .parabola-horizontal-tool .main-title {
+            font-size: 1.5rem;
+        }
+    }

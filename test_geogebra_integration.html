@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test GeoGebra Integration</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .success {
+            color: #28a745;
+        }
+        .error {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4">Test GeoGebra Integration</h1>
+        
+        <div class="test-section">
+            <h3>Test 1: Load GeoGebra Tool</h3>
+            <button class="btn btn-primary" onclick="testLoadGeogebra()">
+                Load GeoGebra Tool
+            </button>
+            <div id="test1-result" class="mt-3"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Test 2: Verify Content Structure</h3>
+            <button class="btn btn-secondary" onclick="testContentStructure()">
+                Check Content Structure
+            </button>
+            <div id="test2-result" class="mt-3"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Test 3: Verify External Links</h3>
+            <button class="btn btn-info" onclick="testExternalLinks()">
+                Check External Links
+            </button>
+            <div id="test3-result" class="mt-3"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Test 4: Icon Rendering</h3>
+            <button class="btn btn-warning" onclick="testIconRendering()">
+                Check Icon Rendering
+            </button>
+            <div id="test4-result" class="mt-3"></div>
+        </div>
+        
+        <!-- Tool content will be loaded here -->
+        <div id="tool-content" class="tool-container mt-4" style="display: none;">
+            <!-- Content will be dynamically loaded -->
+        </div>
+        
+        <!-- Results Panel -->
+        <div class="test-section mt-4">
+            <h3>Test Results Summary</h3>
+            <div id="results-summary" class="alert alert-info">
+                Run tests to see results here...
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script1.js"></script>
+    <script>
+        let testResults = {
+            loadTool: false,
+            contentStructure: false,
+            externalLinks: false,
+            iconRendering: false
+        };
+
+        function updateSummary() {
+            const summary = document.getElementById('results-summary');
+            const passedTests = Object.values(testResults).filter(Boolean).length;
+            const totalTests = Object.keys(testResults).length;
+            
+            if (passedTests === totalTests) {
+                summary.className = 'alert alert-success';
+                summary.innerHTML = `✅ All tests passed (${passedTests}/${totalTests})! GeoGebra integration is working correctly.`;
+            } else if (passedTests > 0) {
+                summary.className = 'alert alert-warning';
+                summary.innerHTML = `⚠️ ${passedTests}/${totalTests} tests passed. Some issues detected.`;
+            } else {
+                summary.className = 'alert alert-danger';
+                summary.innerHTML = `❌ ${passedTests}/${totalTests} tests passed. Major issues detected.`;
+            }
+        }
+
+        function testLoadGeogebra() {
+            const result = document.getElementById('test1-result');
+            result.innerHTML = '<div class="spinner-border spinner-border-sm me-2" role="status"></div>Testing...';
+            
+            try {
+                // Load the GeoGebra tool
+                if (typeof app !== 'undefined' && app.loadTool) {
+                    app.loadTool('g_Geogebra');
+                    
+                    // Check if content was loaded
+                    setTimeout(() => {
+                        const toolContent = document.getElementById('tool-content');
+                        if (toolContent && toolContent.innerHTML.includes('GeoGebra Clásico')) {
+                            result.innerHTML = '<span class="success">✅ GeoGebra tool loaded successfully</span>';
+                            testResults.loadTool = true;
+                            toolContent.style.display = 'block';
+                        } else {
+                            result.innerHTML = '<span class="error">❌ Failed to load GeoGebra tool content</span>';
+                            testResults.loadTool = false;
+                        }
+                        updateSummary();
+                    }, 500);
+                } else {
+                    result.innerHTML = '<span class="error">❌ App object or loadTool function not available</span>';
+                    testResults.loadTool = false;
+                    updateSummary();
+                }
+            } catch (error) {
+                result.innerHTML = `<span class="error">❌ Error loading tool: ${error.message}</span>`;
+                testResults.loadTool = false;
+                updateSummary();
+            }
+        }
+
+        function testContentStructure() {
+            const result = document.getElementById('test2-result');
+            const toolContent = document.getElementById('tool-content');
+            
+            const checks = [
+                { name: 'Main title', selector: 'h2', text: 'GeoGebra Clásico' },
+                { name: 'Geometry section', selector: '.card-header', text: 'GeoGebra Geometría' },
+                { name: 'Symbolic section', selector: '.card-header', text: 'GeoGebra Simbólico' },
+                { name: 'Statistics section', selector: '.card-header', text: 'GeoGebra Estadístico' },
+                { name: 'Warning note', selector: '.alert-warning', text: 'Nota importante' }
+            ];
+            
+            let passedChecks = 0;
+            let resultHtml = '<ul class="mb-0">';
+            
+            checks.forEach(check => {
+                const elements = toolContent.querySelectorAll(check.selector);
+                let found = false;
+                
+                elements.forEach(el => {
+                    if (el.textContent.includes(check.text)) {
+                        found = true;
+                    }
+                });
+                
+                if (found) {
+                    resultHtml += `<li class="success">✅ ${check.name} found</li>`;
+                    passedChecks++;
+                } else {
+                    resultHtml += `<li class="error">❌ ${check.name} missing</li>`;
+                }
+            });
+            
+            resultHtml += '</ul>';
+            result.innerHTML = resultHtml;
+            
+            testResults.contentStructure = passedChecks === checks.length;
+            updateSummary();
+        }
+
+        function testExternalLinks() {
+            const result = document.getElementById('test3-result');
+            const toolContent = document.getElementById('tool-content');
+            
+            const expectedLinks = [
+                'https://www.geogebra.org/classic?lang=es',
+                'https://www.geogebra.org/cas?lang=es',
+                'https://www.geogebra.org/m/D753wjWN'
+            ];
+            
+            let foundLinks = 0;
+            let resultHtml = '<ul class="mb-0">';
+            
+            expectedLinks.forEach(link => {
+                const linkElement = toolContent.querySelector(`a[href="${link}"]`);
+                if (linkElement) {
+                    resultHtml += `<li class="success">✅ Link found: ${link}</li>`;
+                    foundLinks++;
+                } else {
+                    resultHtml += `<li class="error">❌ Link missing: ${link}</li>`;
+                }
+            });
+            
+            resultHtml += '</ul>';
+            result.innerHTML = resultHtml;
+            
+            testResults.externalLinks = foundLinks === expectedLinks.length;
+            updateSummary();
+        }
+
+        function testIconRendering() {
+            const result = document.getElementById('test4-result');
+            const toolContent = document.getElementById('tool-content');
+            
+            const expectedIcons = [
+                'fa-compass',
+                'fa-shapes',
+                'fa-calculator',
+                'fa-chart-bar',
+                'fa-exclamation-triangle',
+                'fa-external-link-alt'
+            ];
+            
+            let foundIcons = 0;
+            let resultHtml = '<ul class="mb-0">';
+            
+            expectedIcons.forEach(iconClass => {
+                const iconElement = toolContent.querySelector(`.${iconClass}`);
+                if (iconElement) {
+                    resultHtml += `<li class="success">✅ Icon found: ${iconClass}</li>`;
+                    foundIcons++;
+                } else {
+                    resultHtml += `<li class="error">❌ Icon missing: ${iconClass}</li>`;
+                }
+            });
+            
+            resultHtml += '</ul>';
+            result.innerHTML = resultHtml;
+            
+            testResults.iconRendering = foundIcons === expectedIcons.length;
+            updateSummary();
+        }
+
+        function runAllTests() {
+            testLoadGeogebra();
+            setTimeout(() => {
+                testContentStructure();
+                testExternalLinks();
+                testIconRendering();
+            }, 1000);
+        }
+
+        // Auto-run tests after page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                console.log('Page loaded, running tests...');
+                updateSummary();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

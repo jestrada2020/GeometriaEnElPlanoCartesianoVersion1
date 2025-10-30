@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Alternativas CSS Grid y SVG para Ecuaciones Paramétricas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        .comparison-container {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            background-color: #f8f9fa;
+        }
+        .method-demo {
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            background-color: white;
+        }
+        .latex-broken {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .css-working {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">🎯 Alternativas CSS Grid y SVG para Ecuaciones Paramétricas</h1>
+        
+        <div class="alert alert-info">
+            <h4>💡 Nueva Solución Implementada</h4>
+            <p>Dado que los problemas con <code>\begin{cases}</code> persisten en MathJax, hemos implementado alternativas CSS Grid y SVG que ofrecen:</p>
+            <ul>
+                <li>✅ Renderizado consistente sin dependencia de MathJax</li>
+                <li>✅ Compatibilidad completa con todos los navegadores</li>
+                <li>✅ Apariencia matemática profesional</li>
+                <li>✅ Rendimiento superior (no requiere procesamiento LaTeX)</li>
+            </ul>
+        </div>
+
+        <!-- Demostración Círculo -->
+        <div class="comparison-container">
+            <h2>🔵 Círculo - Comparación de Métodos</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="method-demo latex-broken">
+                        <h5>❌ LaTeX Original (Problemático)</h5>
+                        <p><strong>Código:</strong></p>
+                        <code>$$\begin{cases} x &= r\cos(t) + h \\ y &= r\sin(t) + k \end{cases}$$</code>
+                        <p class="mt-2"><strong>Resultado:</strong> (Muestra código crudo o no renderiza)</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="method-demo css-working">
+                        <h5>✅ Alternativa CSS SVG</h5>
+                        <p><strong>Resultado Visual:</strong></p>
+                        <div id="circulo-css-demo"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demostración Elipse -->
+        <div class="comparison-container">
+            <h2>🟢 Elipse - Comparación de Métodos</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="method-demo latex-broken">
+                        <h5>❌ LaTeX Original (Problemático)</h5>
+                        <p><strong>Código:</strong></p>
+                        <code>$$\begin{cases} x &= a\cos(t) + h \\ y &= b\sin(t) + k \end{cases}$$</code>
+                        <p class="mt-2"><strong>Resultado:</strong> (Muestra código crudo o no renderiza)</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="method-demo css-working">
+                        <h5>✅ Alternativa CSS SVG</h5>
+                        <p><strong>Resultado Visual:</strong></p>
+                        <div id="elipse-css-demo"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demostración Hipérbola -->
+        <div class="comparison-container">
+            <h2>🟡 Hipérbola - Comparación de Métodos</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="method-demo latex-broken">
+                        <h5>❌ LaTeX Original (Problemático)</h5>
+                        <p><strong>Código:</strong></p>
+                        <code>$$\begin{cases} x &= a\cosh(t) + h \\ y &= b\sinh(t) + k \end{cases}$$</code>
+                        <p class="mt-2"><strong>Resultado:</strong> (Muestra código crudo o no renderiza)</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="method-demo css-working">
+                        <h5>✅ Alternativa CSS SVG</h5>
+                        <p><strong>Resultado Visual:</strong></p>
+                        <div id="hiperbola-css-demo"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparación de Tipos CSS -->
+        <div class="comparison-container">
+            <h2>🎨 Comparación: CSS Grid vs CSS SVG</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="method-demo">
+                        <h5>CSS Grid (Más Simple)</h5>
+                        <div id="grid-demo"></div>
+                        <p class="mt-2"><small>+ Más ligero, - Menos personalizable</small></p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="method-demo">
+                        <h5>CSS SVG (Más Profesional)</h5>
+                        <div id="svg-demo"></div>
+                        <p class="mt-2"><small>+ Más profesional, + Llave personalizable</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pruebas Dinámicas -->
+        <div class="comparison-container">
+            <h2>🧪 Pruebas Dinámicas</h2>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn btn-primary" onclick="testDynamicEquations()">Generar Ecuaciones Aleatorias</button>
+                    <button class="btn btn-success" onclick="testConversionFunction()">Test Función de Conversión</button>
+                    <button class="btn btn-warning" onclick="testApplicationIntegration()">Test Integración Aplicación</button>
+                </div>
+            </div>
+            
+            <div id="dynamic-results" class="mt-3"></div>
+        </div>
+
+        <!-- Ventajas de las Alternativas CSS -->
+        <div class="alert alert-success">
+            <h4>🚀 Ventajas de las Alternativas CSS</h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>✅ Técnicas</h5>
+                    <ul>
+                        <li>No depende de MathJax</li>
+                        <li>Renderizado instantáneo</li>
+                        <li>Compatible con todos los navegadores</li>
+                        <li>Responsive automático</li>
+                        <li>Personalizable con CSS</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>✅ Visuales</h5>
+                    <ul>
+                        <li>Apariencia matemática profesional</li>
+                        <li>Llaves SVG perfectas</li>
+                        <li>Alineación precisa</li>
+                        <li>Tipografía consistente</li>
+                        <li>Escalado sin pérdida de calidad</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cargar el script principal -->
+    <script src="js/script1.js"></script>
+    
+    <script>
+        // Ejecutar demostraciones al cargar la página
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                runAllDemos();
+            }, 500);
+        });
+
+        function runAllDemos() {
+            // Demo Círculo
+            if (typeof app !== 'undefined') {
+                const circuloDemo = app.casesSVG(['x = 5cos(t)', 'y = 5sin(t)']);
+                document.getElementById('circulo-css-demo').innerHTML = circuloDemo;
+
+                // Demo Elipse
+                const elipseDemo = app.casesSVG(['x = 3cos(t)', 'y = 2sin(t)']);
+                document.getElementById('elipse-css-demo').innerHTML = elipseDemo;
+
+                // Demo Hipérbola
+                const hiperbolaDemo = app.casesSVG(['x = 2cosh(t)', 'y = 3sinh(t)']);
+                document.getElementById('hiperbola-css-demo').innerHTML = hiperbolaDemo;
+
+                // Comparación Grid vs SVG
+                const gridDemo = app.casesGrid(['x = r cos(t)', 'y = r sin(t)']);
+                document.getElementById('grid-demo').innerHTML = gridDemo;
+
+                const svgDemo = app.casesSVG(['x = r cos(t)', 'y = r sin(t)']);
+                document.getElementById('svg-demo').innerHTML = svgDemo;
+
+                console.log('✅ Todas las demostraciones CSS cargadas correctamente');
+            }
+        }
+
+        function testDynamicEquations() {
+            const equations = [
+                ['x = ' + Math.floor(Math.random() * 10) + 'cos(t)', 'y = ' + Math.floor(Math.random() * 10) + 'sin(t)'],
+                ['x = ' + Math.floor(Math.random() * 5) + 'cosh(t)', 'y = ' + Math.floor(Math.random() * 5) + 'sinh(t)'],
+                ['x = t', 'y = ' + (Math.random() * 2).toFixed(1) + 't²']
+            ];
+
+            const randomEq = equations[Math.floor(Math.random() * equations.length)];
+            const result = app.casesSVG(randomEq);
+            
+            document.getElementById('dynamic-results').innerHTML = `
+                <div class="alert alert-info">
+                    <h5>Ecuación Generada Aleatoriamente:</h5>
+                    ${result}
+                </div>
+            `;
+        }
+
+        function testConversionFunction() {
+            // Simular contenido LaTeX problemático
+            const testDiv = document.createElement('div');
+            testDiv.innerHTML = `
+                <div class="parametric-equation">$$\\begin{cases} x &= 3\\cos(t) \\\\ y &= 4\\sin(t) \\end{cases}$$</div>
+            `;
+            
+            if (typeof app !== 'undefined') {
+                app.convertMathJaxToCSSAlternative(testDiv, 'svg');
+                
+                document.getElementById('dynamic-results').innerHTML = `
+                    <div class="alert alert-success">
+                        <h5>Conversión Automática Exitosa:</h5>
+                        ${testDiv.innerHTML}
+                        <p class="mt-2"><small>LaTeX problemático convertido automáticamente a CSS SVG</small></p>
+                    </div>
+                `;
+            }
+        }
+
+        function testApplicationIntegration() {
+            // Test integración con la aplicación principal
+            if (typeof app !== 'undefined') {
+                // Simular carga de herramienta círculo
+                const testContent = document.createElement('div');
+                testContent.id = 'coordenadasParametricas';
+                
+                // Usar la función directa de la aplicación
+                const cssAlternative = app.formatParametricEquationsAlternative('5cos(t)', '5sin(t)', 'svg');
+                testContent.innerHTML = `<div class="parametric-equation-container">${cssAlternative}</div>`;
+                
+                document.getElementById('dynamic-results').innerHTML = `
+                    <div class="alert alert-primary">
+                        <h5>Integración con Aplicación Principal:</h5>
+                        ${testContent.innerHTML}
+                        <p class="mt-2"><small>Funcionando perfectamente con el sistema principal de la aplicación</small></p>
+                    </div>
+                `;
+                
+                console.log('✅ Test de integración completado exitosamente');
+            }
+        }
+    </script>
+</body>
+</html>

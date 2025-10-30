@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caja de Herramientas Matemáticas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Configuración mejorada de MathJax -->
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                ignoreClass: "tex2jax_ignore",
+                processClass: "tex2jax_process",
+                preview: "none"
+            },
+            TeX: {
+                equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js", "cancel.js"],
+                Macros: {
+                    det: ["\\operatorname{det}"],
+                    frac: ["\\dfrac{#1}{#2}", 2],
+                    cos: ["\\cos"],
+                    sin: ["\\sin"],
+                    cosh: ["\\cosh"],
+                    sinh: ["\\sinh"]
+                },
+                noErrors: {
+                    inlineDelimiters: ["",""],
+                    multiLine: true,
+                    style: {
+                        "font-size": "90%",
+                        "text-align": "left",
+                        "color": "black",
+                        "padding": "1px 3px",
+                        "border": "1px solid"
+                    }
+                }
+            },
+            "HTML-CSS": {
+                scale: 90,
+                linebreaks: { automatic: true },
+                availableFonts: ["STIX", "TeX"],
+                preferredFont: "TeX",
+                webFont: "TeX",
+                imageFont: null,
+                matchFontHeight: false,
+                styles: {
+                    ".MathJax_Display": {
+                        "text-align": "center !important",
+                        "margin": "1em 0 !important"
+                    },
+                    ".MathJax": {
+                        "color": "inherit !important"
+                    }
+                }
+            },
+            SVG: {
+                scale: 90,
+                linebreaks: { automatic: true },
+                font: "TeX"
+            },
+            showMathMenu: false,
+            showProcessingMessages: false,
+            messageStyle: "none",
+            skipStartupTypeset: false
+        });
+        
+        // Configurar MathJax para re-renderizar cuando se actualice dinámicamente
+        MathJax.Hub.Register.MessageHook("Math Processing Error", function (message) {
+            console.warn("MathJax Error: ", message);
+            // Intentar corregir errores comunes con sqrt
+            if (message[1] && message[1].includes && message[1].includes('sqrt')) {
+                console.log("Detectado error con sqrt, intentando corrección automática");
+                setTimeout(function() {
+                    if (window.app && window.app.validateAndFixSqrtFormulas) {
+                        window.app.validateAndFixSqrtFormulas(document.body);
+                    }
+                }, 100);
+            }
+            // Intentar corregir errores comunes con cases
+            if (message[1] && message[1].includes && (message[1].includes('cases') || message[1].includes('begin') || message[1].includes('end'))) {
+                console.log("Detectado error con cases, intentando corrección automática");
+                setTimeout(function() {
+                    if (window.app && window.app.validateAndFixCasesFormulas) {
+                        window.app.validateAndFixCasesFormulas(document.body);
+                    }
+                }, 100);
+            }
+        });
+        
+        // Función global para re-renderizar MathJax de forma segura
+        window.reprocessMathJax = function(element) {
+            if (typeof MathJax !== "undefined" && MathJax.Hub) {
+                if (element) {
+                    MathJax.Hub.Queue(["Typeset", MathJax.Hub, element]);
+                } else {
+                    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+                }
+            }
+        };
+        
+        // Asegurar que MathJax esté listo
+        MathJax.Hub.Register.StartupHook("End", function () {
+            console.log("MathJax está listo");
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <style>
+    
+</style>
+</head>
+<body>
+    <div id="sidebar">
+        <h2>Geometría plana conceptos interactivos</h2>
+        <ul>
+            <li><button onclick="app.loadTool('introduccion1')"class="active">Introducción</button></li>
+            <li><button onclick="app.loadTool('distanciaPuntos')">Distancia entre puntos del plano</button></li>
+            <li><button onclick="app.loadTool('sistemaRectas')">Sistemas Lineales y NL</button></li>
+            <li><button onclick="app.loadTool('conceptoCirculo')">Concepto de Círculo</button></li>
+            <li><button onclick="app.loadTool('conceptoElipse')">Concepto de Elipse</button></li>
+            <li><button onclick="app.loadTool('conceptoHiperbola')">Concepto de Hipérbola</button></li>
+            <li><button onclick="app.loadTool('parabolaVertical')">Parábolas Verticales</button></li>
+            <li><button onclick="app.loadTool('parabolaHorizontal')">Parábolas Horizontales</button></li>
+            <li><button onclick="app.loadTool('determinantes3')">Suma de Matrices</button></li>
+            <li><button onclick="app.loadTool('determinantes4')">Producto de Matrices</button></li>
+            <li><button onclick="app.loadTool('determinantes5')">Potencia de una Matriz</button></li>
+            <li><button onclick="app.loadTool('algebraLineal')">Sistemas de Ecuaciones (Gauss-Jordan)</button></li>
+            <li><button onclick="app.loadTool('determinantes')">Determinantes por Operaciones</button></li>
+            <li><button class="sidebar-button" onclick="app.loadTool('g_Geogebra')">
+                <i class="fas fa-compass"></i> Geogebra Clásico
+            </button></li>
+            <!-- Más herramientas -->
+        </ul>
+    </div>
+
+    <div id="content">
+        <div id="tool-content" class="tool-container">
+            <!-- El contenido de la herramienta se cargará aquí -->
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="js/script1.js"></script>
+    <script src="js/script2.js"></script>
+    <script src="js/script3.js"></script>
+
+    <script type="module">
+        import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
+        Chatbot.init({
+            chatflowid: "96460740-d404-417e-8c57-09930daa8ec6",
+            apiHost: "https://flowiseai-railway-production-9c6d7.up.railway.app",
+        })
+    </script>
+</body>
+</html>

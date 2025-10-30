@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Final - Corrección de begin{cases}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                ignoreClass: "tex2jax_ignore",
+                processClass: "tex2jax_process",
+                preview: "none"
+            },
+            TeX: {
+                equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js", "cancel.js"],
+                Macros: {
+                    det: ["\\operatorname{det}"],
+                    frac: ["\\dfrac{#1}{#2}", 2],
+                    cos: ["\\cos"],
+                    sin: ["\\sin"],
+                    cosh: ["\\cosh"],
+                    sinh: ["\\sinh"]
+                }
+            },
+            "HTML-CSS": {
+                scale: 90,
+                availableFonts: ["STIX", "TeX"],
+                preferredFont: "TeX"
+            },
+            showMathMenu: false,
+            showProcessingMessages: false,
+            messageStyle: "none",
+            skipStartupTypeset: false
+        });
+        
+        MathJax.Hub.Register.StartupHook("End", function () {
+            console.log("MathJax listo");
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <style>
+        .test-card {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            background-color: #fff;
+        }
+        .success { border-color: #28a745; background-color: #f8fff9; }
+        .code-display {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Test Final - Corrección de begin{cases}</h1>
+        <p class="lead">Test con la nueva función prepareLatexString que protege las estructuras cases.</p>
+        
+        <div class="test-card success">
+            <h3>Ecuaciones Paramétricas de Hipérbola</h3>
+            <div id="test-hiperbola">
+                <!-- Se generará dinámicamente -->
+            </div>
+            <h5>Código generado:</h5>
+            <div class="code-display" id="code-hiperbola"></div>
+        </div>
+
+        <div class="test-card success">
+            <h3>Ecuaciones Paramétricas de Círculo</h3>
+            <div id="test-circulo">
+                <!-- Se generará dinámicamente -->
+            </div>
+            <h5>Código generado:</h5>
+            <div class="code-display" id="code-circulo"></div>
+        </div>
+
+        <div class="test-card success">
+            <h3>Ecuaciones Paramétricas de Elipse</h3>
+            <div id="test-elipse">
+                <!-- Se generará dinámicamente -->
+            </div>
+            <h5>Código generado:</h5>
+            <div class="code-display" id="code-elipse"></div>
+        </div>
+
+        <button class="btn btn-primary" onclick="runFinalTest()">Ejecutar Test Final</button>
+        <button class="btn btn-success" onclick="testPrepareLatexString()">Test prepareLatexString</button>
+    </div>
+
+    <script>
+        // Copiar la nueva función prepareLatexString
+        function prepareLatexString(latex) {
+            // Reemplazar dobles barras por barras simples en comandos comunes
+            // PERO preservar las dobles barras dentro de begin{cases}
+            
+            // Primero, proteger las dobles barras dentro de cases
+            let result = latex;
+            
+            // Encontrar todas las estructuras begin{cases}...end{cases} y proteger las \\\\ dentro
+            const casesRegex = /\\begin\{cases\}([\s\S]*?)\\end\{cases\}/g;
+            const protectedCases = [];
+            let match;
+            let caseIndex = 0;
+            
+            while ((match = casesRegex.exec(latex)) !== null) {
+                const placeholder = `__PROTECTED_CASES_${caseIndex}__`;
+                protectedCases[caseIndex] = match[0]; // Guardar toda la estructura cases
+                result = result.replace(match[0], placeholder);
+                caseIndex++;
+            }
+            
+            // Ahora aplicar las correcciones normales al texto sin cases
+            result = result
+                .replace(/\\\\sqrt/g, '\\sqrt')
+                .replace(/\\\\cos/g, '\\cos')
+                .replace(/\\\\sin/g, '\\sin')
+                .replace(/\\\\cosh/g, '\\cosh')
+                .replace(/\\\\sinh/g, '\\sinh')
+                .replace(/\\\\begin/g, '\\begin')
+                .replace(/\\\\end/g, '\\end')
+                .replace(/\\\\frac/g, '\\frac')
+                .replace(/\\\\operatorname/g, '\\operatorname')
+                .replace(/\\\\left/g, '\\left')
+                .replace(/\\\\right/g, '\\right')
+                .replace(/\\\\\\/g, '\\\\'); // Esta línea ya no afectará a cases
+            
+            // Restaurar las estructuras cases protegidas
+            for (let i = 0; i < protectedCases.length; i++) {
+                result = result.replace(`__PROTECTED_CASES_${i}__`, protectedCases[i]);
+            }
+            
+            return result;
+        }
+
+        function formatParametricEquations(x, y) {
+            return `\\begin{cases} 
+x &= ${x} \\\\ 
+y &= ${y}
+\\end{cases}`;
+        }
+
+        function runFinalTest() {
+            console.log('=== EJECUTANDO TEST FINAL ===');
+            
+            // Test Hipérbola
+            const xHiperbola = '3\\cosh(t)';
+            const yHiperbola = '4\\sinh(t)';
+            const hiperbolaLatex = formatParametricEquations(xHiperbola, yHiperbola);
+            
+            document.getElementById('test-hiperbola').innerHTML = 
+                `<div class="parametric-equation">$$${hiperbolaLatex}$$</div>`;
+            document.getElementById('code-hiperbola').textContent = hiperbolaLatex;
+            
+            // Test Círculo
+            const xCirculo = 'r\\cos(t) + h';
+            const yCirculo = 'r\\sin(t) + k';
+            const circuloLatex = formatParametricEquations(xCirculo, yCirculo);
+            
+            document.getElementById('test-circulo').innerHTML = 
+                `<div class="parametric-equation">$$${circuloLatex}$$</div>`;
+            document.getElementById('code-circulo').textContent = circuloLatex;
+            
+            // Test Elipse
+            const xElipse = 'a\\cos(t) + h';
+            const yElipse = 'b\\sin(t) + k';
+            const elipseLatex = formatParametricEquations(xElipse, yElipse);
+            
+            document.getElementById('test-elipse').innerHTML = 
+                `<div class="parametric-equation">$$${elipseLatex}$$</div>`;
+            document.getElementById('code-elipse').textContent = elipseLatex;
+            
+            // Re-procesar con MathJax
+            setTimeout(() => {
+                if (typeof MathJax !== "undefined" && MathJax.Hub) {
+                    MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.body]);
+                }
+            }, 100);
+        }
+
+        function testPrepareLatexString() {
+            // Test de la nueva función
+            const testInput = '$$\\begin{cases} x &= 3\\\\cosh(t) \\\\\\\\ y &= 4\\\\sinh(t) \\end{cases}$$';
+            const result = prepareLatexString(testInput);
+            
+            console.log('Input:', testInput);
+            console.log('Output:', result);
+            
+            // Mostrar en una alerta
+            alert(`Input: ${testInput}\n\nOutput: ${result}`);
+        }
+
+        // Ejecutar test al cargar
+        window.addEventListener('load', function() {
+            setTimeout(runFinalTest, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Circle Sqrt Fix - MathJax 2.7.5</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- MathJax 2.7.5 Configuration (Same as main app) -->
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                ignoreClass: "tex2jax_ignore",
+                processClass: "tex2jax_process",
+                preview: "none"
+            },
+            TeX: {
+                equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js", "cancel.js"],
+                Macros: {
+                    det: ["\\operatorname{det}"],
+                    frac: ["\\dfrac{#1}{#2}", 2],
+                    cos: ["\\cos"],
+                    sin: ["\\sin"],
+                    cosh: ["\\cosh"],
+                    sinh: ["\\sinh"]
+                }
+            },
+            "HTML-CSS": {
+                scale: 90,
+                linebreaks: { automatic: true },
+                availableFonts: ["STIX", "TeX"],
+                preferredFont: "TeX",
+                webFont: "TeX",
+                imageFont: null,
+                matchFontHeight: false
+            },
+            SVG: {
+                scale: 90,
+                linebreaks: { automatic: true },
+                font: "TeX"
+            },
+            showMathMenu: false,
+            showProcessingMessages: false,
+            messageStyle: "none",
+            skipStartupTypeset: false
+        });
+        
+        // Error handling
+        MathJax.Hub.Register.MessageHook("Math Processing Error", function (message) {
+            console.warn("MathJax Error: ", message);
+        });
+        
+        // Function to reprocess MathJax
+        window.reprocessMathJax = function(element) {
+            if (typeof MathJax !== "undefined" && MathJax.Hub) {
+                if (element) {
+                    MathJax.Hub.Queue(["Typeset", MathJax.Hub, element]);
+                } else {
+                    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+                }
+            }
+        };
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Test Circle Sqrt Expressions - MathJax 2.7.5</h1>
+        
+        <!-- Test 1: Direct sqrt expressions -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Test 1: Direct sqrt expressions</h3>
+            </div>
+            <div class="card-body">
+                <p>Basic inline: $\sqrt{x^2 + y^2}$</p>
+                <p>Display math:</p>
+                $$\sqrt{(x-h)^2 + (y-k)^2} = r$$
+                
+                <div class="math-equation mt-3">
+                    <strong>Circle equation:</strong>
+                    $$d(P,C) = r$$
+                    $$\sqrt{(x-h)^2 + (y-k)^2} = r$$
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test 2: Raw problematic expressions -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Test 2: Problematic expressions (before validation)</h3>
+            </div>
+            <div class="card-body" id="raw-content">
+                <p>Raw sqrt: sqrt{(x-h)^2 + (y-k)^2} = r</p>
+                <p>Double escaped: \\sqrt{(x-h)^2 + (y-k)^2} = r</p>
+                <p>With parentheses: sqrt((x-h)^2 + (y-k)^2) = r</p>
+                <div class="math-equation">
+                    Raw in math div: sqrt{x^2 + y^2}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test 3: After validation -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Test 3: After validation (click button to apply)</h3>
+            </div>
+            <div class="card-body">
+                <button class="btn btn-primary mb-3" onclick="applyValidation()">Apply Sqrt Validation</button>
+                <div id="validation-content">
+                    <p>Raw sqrt: sqrt{(x-h)^2 + (y-k)^2} = r</p>
+                    <p>Double escaped: \\sqrt{(x-h)^2 + (y-k)^2} = r</p>
+                    <p>With parentheses: sqrt((x-h)^2 + (y-k)^2) = r</p>
+                    <div class="math-equation">
+                        Raw in math div: sqrt{x^2 + y^2}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Status -->
+        <div class="alert alert-info">
+            <strong>Status:</strong> Testing sqrt expressions with MathJax 2.7.5 (same as main app)
+            <div id="status-log" class="mt-2 small"></div>
+        </div>
+    </div>
+
+    <!-- Load validation functions -->
+    <script src="js/script1.js"></script>
+    
+    <script>
+        function log(message) {
+            const statusLog = document.getElementById('status-log');
+            statusLog.innerHTML += '<br>' + new Date().toLocaleTimeString() + ': ' + message;
+            console.log(message);
+        }
+        
+        // Test validation function
+        function applyValidation() {
+            log('Starting validation test...');
+            const validationContent = document.getElementById('validation-content');
+            
+            if (window.app && window.app.validateAndFixSqrtFormulas) {
+                log('Applying validateAndFixSqrtFormulas...');
+                window.app.validateAndFixSqrtFormulas(validationContent);
+                
+                setTimeout(() => {
+                    if (window.app.validateAndFixAllMathFormulasWithAlternatives) {
+                        log('Applying validateAndFixAllMathFormulasWithAlternatives...');
+                        window.app.validateAndFixAllMathFormulasWithAlternatives(validationContent);
+                    }
+                    
+                    setTimeout(() => {
+                        log('Reprocessing MathJax...');
+                        if (window.app.reprocessMathJaxGlobal) {
+                            window.app.reprocessMathJaxGlobal();
+                        } else {
+                            reprocessMathJax(validationContent);
+                        }
+                        log('Validation complete!');
+                    }, 150);
+                }, 50);
+            } else {
+                log('ERROR: Validation functions not available from app object');
+                log('Available app properties: ' + (window.app ? Object.keys(window.app).join(', ') : 'app not defined'));
+            }
+        }
+        
+        // Check MathJax status
+        MathJax.Hub.Register.StartupHook("End", function () {
+            log("MathJax 2.7.5 is ready and loaded");
+        });
+        
+        // Auto-test after page load
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                log('Page loaded, checking initial state...');
+                reprocessMathJax();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

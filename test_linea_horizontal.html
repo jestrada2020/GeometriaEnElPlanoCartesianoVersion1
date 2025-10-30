@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Línea Horizontal Proporcional</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            line-height: 2;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .test-line {
+            font-size: 18px;
+            margin: 10px 0;
+            padding: 5px;
+            background-color: white;
+        }
+        .comparison {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .before-after {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 5px 0;
+        }
+        .highlight {
+            background-color: #ffffcc;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test: Línea Horizontal Proporcional al Contenido</h1>
+    
+    <div class="test-section">
+        <h2>Contenido Corto vs Largo</h2>
+        <div class="test-line">
+            Expresión corta: <span class="sqrt-symbol">x²</span> - La línea debe ser corta
+        </div>
+        <div class="test-line">
+            Expresión media: <span class="sqrt-symbol">x² + y²</span> - La línea debe ajustarse
+        </div>
+        <div class="test-line">
+            Expresión larga: <span class="sqrt-symbol">(x₁ - x₀)² + (y₁ - y₀)²</span> - La línea debe ser más larga
+        </div>
+        <div class="test-line">
+            Expresión muy larga: <span class="sqrt-symbol">(x-h)² + (y-k)² + (z-l)²</span> - La línea debe cubrir todo
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Comparación de Estilos</h2>
+        <div class="comparison">
+            <div>
+                <strong>sqrt-simple:</strong><br>
+                <span class="sqrt-simple">x² + y²</span>
+            </div>
+            <div>
+                <strong>sqrt-symbol:</strong><br>
+                <span class="sqrt-symbol">x² + y²</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Fórmulas de Geometría</h2>
+        
+        <div class="before-after">
+            <h3>Círculo</h3>
+            <p>Ecuación: <span class="sqrt-symbol">(x-h)² + (y-k)²</span> = r</p>
+        </div>
+
+        <div class="before-after">
+            <h3>Distancia entre puntos</h3>
+            <p>d = <span class="sqrt-symbol">(x₁ - x₀)² + (y₁ - y₀)²</span></p>
+        </div>
+
+        <div class="before-after">
+            <h3>Elipse</h3>
+            <p>d₁ = <span class="sqrt-symbol">(x-c)² + y²</span> y d₂ = <span class="sqrt-symbol">(x+c)² + y²</span></p>
+        </div>
+
+        <div class="before-after">
+            <h3>Hipérbola</h3>
+            <p>|<span class="sqrt-symbol">(x-c)² + y²</span> - <span class="sqrt-symbol">(x+c)² + y²</span>| = 2a</p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Diferentes Tamaños de Fuente</h2>
+        <div style="font-size: 12px;">12px: <span class="sqrt-symbol">x² + y²</span></div>
+        <div style="font-size: 14px;">14px: <span class="sqrt-symbol">x² + y²</span></div>
+        <div style="font-size: 16px;">16px: <span class="sqrt-symbol">x² + y²</span></div>
+        <div style="font-size: 18px;">18px: <span class="sqrt-symbol">x² + y²</span></div>
+        <div style="font-size: 20px;">20px: <span class="sqrt-symbol">x² + y²</span></div>
+        <div style="font-size: 24px;">24px: <span class="sqrt-symbol">x² + y²</span></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test de Alineación Precisa</h2>
+        <p class="highlight">
+            La línea horizontal debe comenzar justo después del símbolo √ y terminar exactamente al final del contenido.
+        </p>
+        <div style="border: 1px solid red; padding: 10px; display: inline-block;">
+            <span class="sqrt-symbol">test</span>
+        </div>
+        <div style="border: 1px solid blue; padding: 10px; display: inline-block; margin-left: 10px;">
+            <span class="sqrt-symbol">contenido más largo</span>
+        </div>
+        <div style="border: 1px solid green; padding: 10px; display: inline-block; margin-left: 10px;">
+            <span class="sqrt-symbol">x² + y² + z²</span>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Verificación Visual</h2>
+        <p>Las líneas horizontales deben:</p>
+        <ul>
+            <li>✓ Ajustarse exactamente al ancho del contenido</li>
+            <li>✓ No extenderse más allá del texto</li>
+            <li>✓ Comenzar después del símbolo √</li>
+            <li>✓ Mantener grosor consistente</li>
+            <li>✓ Alinearse correctamente en diferentes tamaños</li>
+        </ul>
+    </div>
+</body>
+</html>

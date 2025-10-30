@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación exacta del problema</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                ignoreClass: "tex2jax_ignore",
+                processClass: "tex2jax_process",
+                preview: "none"
+            },
+            TeX: {
+                equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js", "cancel.js"],
+                Macros: {
+                    det: ["\\operatorname{det}"],
+                    frac: ["\\dfrac{#1}{#2}", 2],
+                    cos: ["\\cos"],
+                    sin: ["\\sin"],
+                    cosh: ["\\cosh"],
+                    sinh: ["\\sinh"]
+                }
+            },
+            "HTML-CSS": {
+                scale: 90,
+                availableFonts: ["STIX", "TeX"],
+                preferredFont: "TeX"
+            },
+            showMathMenu: false,
+            showProcessingMessages: false,
+            messageStyle: "none",
+            skipStartupTypeset: false
+        });
+        
+        MathJax.Hub.Register.MessageHook("Math Processing Error", function (message) {
+            console.error("Error MathJax:", message);
+        });
+        
+        MathJax.Hub.Register.StartupHook("End", function () {
+            console.log("MathJax listo");
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <style>
+        .step {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .step h4 {
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        .code-block {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            border: 1px solid #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Simulación Exacta del Problema con Hipérbolas</h1>
+        
+        <div class="step">
+            <h4>Paso 1: Generar ecuación como lo hace la aplicación</h4>
+            <div id="coordenadasParametricasHiperbola">
+                <!-- Se llenará dinámicamente -->
+            </div>
+            <div class="code-block" id="step1-code"></div>
+        </div>
+
+        <div class="step">
+            <h4>Paso 2: Aplicar validateAndFixAllMathFormulas</h4>
+            <div id="step2-result">
+                <!-- Resultado después de validación -->
+            </div>
+            <div class="code-block" id="step2-code"></div>
+        </div>
+
+        <div class="step">
+            <h4>Paso 3: Re-procesar con MathJax</h4>
+            <div id="step3-result">
+                <!-- Resultado final -->
+            </div>
+            <div class="code-block" id="step3-code"></div>
+        </div>
+
+        <button class="btn btn-primary" onclick="simulateExactProcess()">Simular Proceso Exacto</button>
+        <button class="btn btn-info" onclick="showDebugInfo()">Mostrar Debug Info</button>
+    </div>
+
+    <script>
+        // Copiar las funciones exactas del archivo principal
+        const app = {
+            formatParametricEquations: function(x, y) {
+                return `\\begin{cases} 
+x &= ${x} \\\\ 
+y &= ${y}
+\\end{cases}`;
+            },
+
+            validateAndFixSqrtFormulas: function(element) {
+                if (!element) return;
+                const mathElements = element.querySelectorAll('.math, .math-equation, [class*="math"]');
+                mathElements.forEach(mathEl => {
+                    let content = mathEl.innerHTML;
+                    let originalContent = content;
+                    if (content.includes('\\sqrt{') || content.includes('sqrt{') || content.includes('\\sqrt')) {
+                        content = content
+                            .replace(/\\\\sqrt\{/g, '\\sqrt{')
+                            .replace(/(?<!\\)sqrt\{/g, '\\sqrt{')
+                            .replace(/\\sqrt\s*\{/g, '\\sqrt{')
+                            .replace(/\}\s*\}/g, '}}')
+                            .replace(/\\sqrt([^{])/g, '\\sqrt{$1}')
+                            .replace(/\\sqrt\{\}/g, '\\sqrt{0}');
+                        
+                        const openBraces = (content.match(/\{/g) || []).length;
+                        const closeBraces = (content.match(/\}/g) || []).length;
+                        if (openBraces !== closeBraces) {
+                            const difference = openBraces - closeBraces;
+                            if (difference > 0) {
+                                content += '}'.repeat(difference);
+                            }
+                        }
+                        if (content !== originalContent) {
+                            mathEl.innerHTML = content;
+                            console.log('sqrt corregido:', originalContent, '->', content);
+                        }
+                    }
+                });
+            },
+
+            validateAndFixCasesFormulas: function(element) {
+                if (!element) return;
+                console.log('=== validateAndFixCasesFormulas INICIO ===');
+                const mathElements = element.querySelectorAll('.math, .math-equation, .parametric-equation, [class*="math"]');
+                console.log('Elementos encontrados:', mathElements.length);
+                
+                mathElements.forEach((mathEl, index) => {
+                    let content = mathEl.innerHTML;
+                    let originalContent = content;
+                    console.log(`Elemento ${index} - Original:`, originalContent);
+                    
+                    if (content.includes('\\begin{cases}') || content.includes('begin{cases}') || content.includes('\\end{cases}') || content.includes('end{cases}')) {
+                        console.log('Contiene cases, aplicando correcciones...');
+                        content = content
+                            .replace(/\\\\begin\{cases\}/g, '\\begin{cases}')
+                            .replace(/\\\\end\{cases\}/g, '\\end{cases}')
+                            .replace(/(?<!\\)begin\{cases\}/g, '\\begin{cases}')
+                            .replace(/(?<!\\)end\{cases\}/g, '\\end{cases}')
+                            .replace(/\\begin\s*\{cases\}/g, '\\begin{cases}')
+                            .replace(/\\end\s*\{cases\}/g, '\\end{cases}')
+                            .replace(/\\\\cosh/g, '\\cosh')
+                            .replace(/\\\\sinh/g, '\\sinh')
+                            .replace(/(?<!\\)cosh/g, '\\cosh')
+                            .replace(/(?<!\\)sinh/g, '\\sinh');
+                        
+                        console.log(`Elemento ${index} - Después:`, content);
+                        
+                        const beginMatches = (content.match(/\\begin\{cases\}/g) || []).length;
+                        const endMatches = (content.match(/\\end\{cases\}/g) || []).length;
+                        if (beginMatches !== endMatches) {
+                            console.warn('Cases desbalanceados');
+                            const difference = beginMatches - endMatches;
+                            if (difference > 0) {
+                                content += '\\end{cases}'.repeat(difference);
+                            }
+                        }
+                        
+                        if (content !== originalContent) {
+                            mathEl.innerHTML = content;
+                            console.log('CAMBIO APLICADO');
+                        }
+                    } else {
+                        console.log('No contiene cases');
+                    }
+                });
+                console.log('=== validateAndFixCasesFormulas FIN ===');
+            },
+
+            validateAndFixCommonMathCommands: function(element) {
+                if (!element) return;
+                const mathElements = element.querySelectorAll('.math, .math-equation, .parametric-equation, [class*="math"]');
+                mathElements.forEach(mathEl => {
+                    let content = mathEl.innerHTML;
+                    let originalContent = content;
+                    content = content
+                        .replace(/(?<!\\)cos\(/g, '\\cos(')
+                        .replace(/(?<!\\)sin\(/g, '\\sin(')
+                        .replace(/(?<!\\)cosh\(/g, '\\cosh(')
+                        .replace(/(?<!\\)sinh\(/g, '\\sinh(')
+                        .replace(/(?<!\\)frac\{/g, '\\frac{');
+                    
+                    if (content !== originalContent) {
+                        mathEl.innerHTML = content;
+                        console.log('Comandos matemáticos corregidos:', originalContent, '->', content);
+                    }
+                });
+            },
+
+            validateAndFixAllMathFormulas: function(element) {
+                if (!element) return;
+                console.log('Iniciando validación integral...');
+                this.validateAndFixSqrtFormulas(element);
+                this.validateAndFixCasesFormulas(element);
+                this.validateAndFixCommonMathCommands(element);
+                console.log('Validación integral completada.');
+            }
+        };
+
+        function simulateExactProcess() {
+            console.log('=== SIMULANDO PROCESO EXACTO ===');
+            
+            // Paso 1: Simular generación como en updateEcuaciones de hipérbola
+            const a = 3, b = 4, h = 0, k = 0;
+            const hParam = h === 0 ? '' : (h > 0 ? ` + ${h}` : ` - ${Math.abs(h)}`);
+            const kParam = k === 0 ? '' : (k > 0 ? ` + ${k}` : ` - ${Math.abs(k)}`);
+            
+            const xEquation = `${a}\\cosh(t)${hParam}`;
+            const yEquation = `${b}\\sinh(t)${kParam}`;
+            
+            const parametricasElement = document.getElementById('coordenadasParametricasHiperbola');
+            parametricasElement.innerHTML = `<div class="parametric-equation">$$${app.formatParametricEquations(xEquation, yEquation)}$$</div>`;
+            
+            document.getElementById('step1-code').textContent = parametricasElement.innerHTML;
+            
+            // Paso 2: Aplicar validaciones
+            const step2Element = document.getElementById('step2-result');
+            step2Element.innerHTML = parametricasElement.innerHTML;
+            app.validateAndFixAllMathFormulas(step2Element);
+            document.getElementById('step2-code').textContent = step2Element.innerHTML;
+            
+            // Paso 3: Re-procesar con MathJax
+            const step3Element = document.getElementById('step3-result');
+            step3Element.innerHTML = step2Element.innerHTML;
+            document.getElementById('step3-code').textContent = step3Element.innerHTML;
+            
+            if (typeof MathJax !== "undefined" && MathJax.Hub) {
+                setTimeout(() => {
+                    MathJax.Hub.Queue(["Typeset", MathJax.Hub, step3Element]);
+                }, 100);
+            }
+        }
+
+        function showDebugInfo() {
+            console.log('=== DEBUG INFO ===');
+            console.log('formatParametricEquations result:', app.formatParametricEquations('3\\cosh(t)', '4\\sinh(t)'));
+        }
+
+        // Ejecutar simulación al cargar
+        window.addEventListener('load', function() {
+            setTimeout(simulateExactProcess, 1000);
+        });
+    </script>
+</body>
+</html>

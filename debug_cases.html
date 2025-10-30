@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug específico para begin{cases}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Configuración simplificada de MathJax -->
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                ignoreClass: "tex2jax_ignore",
+                processClass: "tex2jax_process",
+                preview: "none"
+            },
+            TeX: {
+                equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js", "cancel.js"],
+                Macros: {
+                    det: ["\\operatorname{det}"],
+                    frac: ["\\dfrac{#1}{#2}", 2],
+                    cos: ["\\cos"],
+                    sin: ["\\sin"],
+                    cosh: ["\\cosh"],
+                    sinh: ["\\sinh"]
+                }
+            },
+            "HTML-CSS": {
+                scale: 90,
+                availableFonts: ["STIX", "TeX"],
+                preferredFont: "TeX"
+            },
+            showMathMenu: false,
+            showProcessingMessages: true,
+            messageStyle: "simple"
+        });
+        
+        // Logging detallado de errores
+        MathJax.Hub.Register.MessageHook("Math Processing Error", function (message) {
+            console.error("MathJax Error Detallado: ", message);
+            console.log("Tipo de error:", typeof message[1]);
+            console.log("Contenido del error:", message[1]);
+        });
+        
+        MathJax.Hub.Register.StartupHook("End", function () {
+            console.log("MathJax completamente inicializado");
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <style>
+        .test-box {
+            border: 2px solid #007bff;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+        .error-box {
+            border-color: #dc3545;
+            background-color: #f8d7da;
+        }
+        .success-box {
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+        .raw-content {
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Debug específico para begin{cases}</h1>
+        <p class="lead">Este test diagnostica específicamente los problemas con las ecuaciones paramétricas.</p>
+        
+        <!-- Test 1: Casos básicos -->
+        <div class="test-box">
+            <h3>Test 1: Casos básicos que DEBERÍAN funcionar</h3>
+            <div id="test1">
+                <div class="math">$$\begin{cases} x = \cos(t) \\ y = \sin(t) \end{cases}$$</div>
+            </div>
+            <div class="raw-content" id="test1-raw"></div>
+        </div>
+
+        <!-- Test 2: Casos con cosh/sinh -->
+        <div class="test-box">
+            <h3>Test 2: Casos con cosh/sinh</h3>
+            <div id="test2">
+                <div class="math">$$\begin{cases} x = 3\cosh(t) \\ y = 4\sinh(t) \end{cases}$$</div>
+            </div>
+            <div class="raw-content" id="test2-raw"></div>
+        </div>
+
+        <!-- Test 3: Usando formatParametricEquations -->
+        <div class="test-box">
+            <h3>Test 3: Generado con formatParametricEquations</h3>
+            <div id="test3">
+                <!-- Se llenará dinámicamente -->
+            </div>
+            <div class="raw-content" id="test3-raw"></div>
+        </div>
+
+        <!-- Test 4: Casos problemáticos conocidos -->
+        <div class="test-box error-box">
+            <h3>Test 4: Casos problemáticos</h3>
+            <div id="test4">
+                <div class="math">$$\\begin{cases} x = 3\\cosh(t) \\\\ y = 4\\sinh(t) \\end{cases}$$</div>
+                <div class="math">$$begin{cases} x = 3\cosh(t) \\ y = 4\sinh(t) end{cases}$$</div>
+            </div>
+            <div class="raw-content" id="test4-raw"></div>
+        </div>
+
+        <!-- Controles -->
+        <div class="mt-4">
+            <button class="btn btn-primary" onclick="debugFunctions.showRawContent()">Mostrar Contenido Raw</button>
+            <button class="btn btn-success" onclick="debugFunctions.applyCorrections()">Aplicar Correcciones</button>
+            <button class="btn btn-info" onclick="debugFunctions.reprocessMathJax()">Re-procesar MathJax</button>
+            <button class="btn btn-warning" onclick="debugFunctions.testFormatFunction()">Test formatParametricEquations</button>
+        </div>
+
+        <div id="debug-log" class="mt-4"></div>
+    </div>
+
+    <script>
+        window.debugFunctions = {
+            // Copiar función de formateo del archivo principal
+            formatParametricEquations: function(x, y) {
+                return `\\begin{cases} 
+x &= ${x} \\\\ 
+y &= ${y}
+\\end{cases}`;
+            },
+
+            // Función de corrección simplificada para debug
+            validateAndFixCasesFormulas: function(element) {
+                if (!element) return;
+                
+                console.log("=== INICIO validateAndFixCasesFormulas ===");
+                const mathElements = element.querySelectorAll('.math, .math-equation, .parametric-equation, [class*="math"]');
+                console.log("Elementos encontrados:", mathElements.length);
+                
+                mathElements.forEach((mathEl, index) => {
+                    let content = mathEl.innerHTML;
+                    let originalContent = content;
+                    
+                    console.log(`Elemento ${index}:`);
+                    console.log("Contenido original:", originalContent);
+                    
+                    if (content.includes('\\begin{cases}') || content.includes('begin{cases}') || content.includes('\\end{cases}') || content.includes('end{cases}')) {
+                        console.log("Contiene cases, aplicando correcciones...");
+                        
+                        content = content
+                            .replace(/\\\\begin\{cases\}/g, '\\begin{cases}')
+                            .replace(/\\\\end\{cases\}/g, '\\end{cases}')
+                            .replace(/(?<!\\)begin\{cases\}/g, '\\begin{cases}')
+                            .replace(/(?<!\\)end\{cases\}/g, '\\end{cases}')
+                            .replace(/\\begin\s*\{cases\}/g, '\\begin{cases}')
+                            .replace(/\\end\s*\{cases\}/g, '\\end{cases}')
+                            .replace(/\\\\cosh/g, '\\cosh')
+                            .replace(/\\\\sinh/g, '\\sinh')
+                            .replace(/(?<!\\)cosh/g, '\\cosh')
+                            .replace(/(?<!\\)sinh/g, '\\sinh');
+                        
+                        console.log("Contenido después de correcciones:", content);
+                        
+                        if (content !== originalContent) {
+                            mathEl.innerHTML = content;
+                            console.log("CAMBIO APLICADO");
+                        } else {
+                            console.log("No se necesitaron cambios");
+                        }
+                    } else {
+                        console.log("No contiene cases");
+                    }
+                });
+                
+                console.log("=== FIN validateAndFixCasesFormulas ===");
+            },
+
+            showRawContent: function() {
+                document.getElementById('test1-raw').textContent = document.getElementById('test1').innerHTML;
+                document.getElementById('test2-raw').textContent = document.getElementById('test2').innerHTML;
+                document.getElementById('test3-raw').textContent = document.getElementById('test3').innerHTML;
+                document.getElementById('test4-raw').textContent = document.getElementById('test4').innerHTML;
+            },
+
+            applyCorrections: function() {
+                console.log("Aplicando correcciones...");
+                this.validateAndFixCasesFormulas(document.body);
+                
+                // Re-procesar MathJax
+                if (typeof MathJax !== "undefined" && MathJax.Hub) {
+                    setTimeout(() => {
+                        MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.body]);
+                    }, 100);
+                }
+            },
+
+            reprocessMathJax: function() {
+                if (typeof MathJax !== "undefined" && MathJax.Hub) {
+                    console.log("Re-procesando MathJax...");
+                    MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.body]);
+                }
+            },
+
+            testFormatFunction: function() {
+                const result = this.formatParametricEquations("3\\cosh(t)", "4\\sinh(t)");
+                console.log("Resultado de formatParametricEquations:", result);
+                
+                const test3Element = document.getElementById('test3');
+                test3Element.innerHTML = `<div class="parametric-equation">$$${result}$$</div>`;
+                
+                document.getElementById('test3-raw').textContent = test3Element.innerHTML;
+                
+                // Re-procesar solo este elemento
+                setTimeout(() => {
+                    if (typeof MathJax !== "undefined" && MathJax.Hub) {
+                        MathJax.Hub.Queue(["Typeset", MathJax.Hub, test3Element]);
+                    }
+                }, 100);
+            }
+        };
+
+        // Al cargar la página
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                debugFunctions.showRawContent();
+                debugFunctions.testFormatFunction();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

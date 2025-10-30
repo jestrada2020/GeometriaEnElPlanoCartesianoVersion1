@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Corrección de Fórmulas sqrt</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Configuración mejorada de MathJax -->
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                ignoreClass: "tex2jax_ignore",
+                processClass: "tex2jax_process",
+                preview: "none"
+            },
+            TeX: {
+                equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js", "cancel.js"],
+                Macros: {
+                    det: ["\\operatorname{det}"],
+                    frac: ["\\dfrac{#1}{#2}", 2],
+                    cos: ["\\cos"],
+                    sin: ["\\sin"],
+                    cosh: ["\\cosh"],
+                    sinh: ["\\sinh"],
+                    begin: ["\\begin{#1}", 1],
+                    end: ["\\end{#1}", 1],
+                    cases: ["\\begin{cases} #1 \\end{cases}", 1]
+                },
+                noErrors: {
+                    inlineDelimiters: ["",""],
+                    multiLine: true,
+                    style: {
+                        "font-size": "90%",
+                        "text-align": "left",
+                        "color": "black",
+                        "padding": "1px 3px",
+                        "border": "1px solid"
+                    }
+                }
+            },
+            "HTML-CSS": {
+                scale: 90,
+                linebreaks: { automatic: true },
+                availableFonts: ["STIX", "TeX"],
+                preferredFont: "TeX",
+                webFont: "TeX",
+                imageFont: null,
+                matchFontHeight: false,
+                styles: {
+                    ".MathJax_Display": {
+                        "text-align": "center !important",
+                        "margin": "1em 0 !important"
+                    },
+                    ".MathJax": {
+                        "color": "inherit !important"
+                    }
+                }
+            },
+            SVG: {
+                scale: 90,
+                linebreaks: { automatic: true },
+                font: "TeX"
+            },
+            showMathMenu: false,
+            showProcessingMessages: false,
+            messageStyle: "none",
+            skipStartupTypeset: false
+        });
+        
+        // Configurar MathJax para re-renderizar cuando se actualice dinámicamente
+        MathJax.Hub.Register.MessageHook("Math Processing Error", function (message) {
+            console.warn("MathJax Error: ", message);
+            // Intentar corregir errores comunes con sqrt
+            if (message[1] && message[1].includes && message[1].includes('sqrt')) {
+                console.log("Detectado error con sqrt, intentando corrección automática");
+                setTimeout(function() {
+                    if (window.testFunctions && window.testFunctions.validateAndFixSqrtFormulas) {
+                        window.testFunctions.validateAndFixSqrtFormulas(document.body);
+                    }
+                }, 100);
+            }
+        });
+        
+        // Asegurar que MathJax esté listo
+        MathJax.Hub.Register.StartupHook("End", function () {
+            console.log("MathJax está listo");
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <style>
+        .test-case {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .before {
+            background-color: #fff3cd;
+        }
+        .after {
+            background-color: #d4edda;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Test de Corrección de Fórmulas sqrt</h1>
+        
+        <div class="test-case before">
+            <h3>Antes de la corrección (formato crudo):</h3>
+            <div class="math">$$d = \sqrt{(x_1 - x_0)^2 + (y_1 - y_0)^2}$$</div>
+        </div>
+        
+        <div class="test-case">
+            <h3>Casos problemáticos que se deben corregir:</h3>
+            <div class="math">$$\\sqrt{25} = 5$$</div>
+            <div class="math">$$sqrt{16} + 4$$</div>
+            <div class="math">$$\sqrt {9} = 3$$</div>
+            <div class="math">$$\sqrt{} = 0$$</div>
+        </div>
+        
+        <div class="test-case">
+            <h3>Fórmulas de distancia y ecuaciones de cónicas:</h3>
+            <div class="math">$$\sqrt{(x-h)^2 + (y-k)^2} = r$$</div>
+            <div class="math">$$\sqrt{(x-h+c)^2 + (y-k)^2} + \sqrt{(x-h-c)^2 + (y-k)^2} = 2a$$</div>
+            <div class="math">$$|\sqrt{(x-h+c)^2 + (y-k)^2} - \sqrt{(x-h-c)^2 + (y-k)^2}| = 2a$$</div>
+        </div>
+        
+        <button class="btn btn-primary" onclick="testFunctions.runTest()">Ejecutar Test de Corrección</button>
+        <button class="btn btn-success" onclick="testFunctions.manualFix()">Aplicar Corrección Manual</button>
+        
+        <div id="test-results" class="mt-4"></div>
+    </div>
+
+    <script>
+        window.testFunctions = {
+            // Función específica para validar y corregir fórmulas con sqrt (copiada de script1.js)
+            validateAndFixSqrtFormulas: function(element) {
+                if (!element) return;
+                
+                // Buscar todas las fórmulas matemáticas
+                const mathElements = element.querySelectorAll('.math, .math-equation, [class*="math"]');
+                
+                mathElements.forEach(mathEl => {
+                    let content = mathEl.innerHTML;
+                    let originalContent = content;
+                    
+                    // Verificar si contiene sqrt en formato crudo o problemático
+                    if (content.includes('\\sqrt{') || content.includes('sqrt{') || content.includes('\\sqrt')) {
+                        // Limpiar y corregir el formato
+                        content = content
+                            .replace(/\\\\sqrt\{/g, '\\sqrt{')        // Corregir doble escape
+                            .replace(/(?<!\\)sqrt\{/g, '\\sqrt{')     // Añadir barra si falta
+                            .replace(/\\sqrt\s*\{/g, '\\sqrt{')       // Eliminar espacios extra
+                            .replace(/\}\s*\}/g, '}}')               // Corregir llaves dobles
+                            .replace(/\\sqrt([^{])/g, '\\sqrt{$1}')   // Añadir llaves si faltan
+                            .replace(/\\sqrt\{\}/g, '\\sqrt{0}');     // Corregir sqrt vacío
+                        
+                        // Validar que las llaves estén balanceadas
+                        const openBraces = (content.match(/\{/g) || []).length;
+                        const closeBraces = (content.match(/\}/g) || []).length;
+                        
+                        if (openBraces !== closeBraces) {
+                            console.warn('Llaves desbalanceadas en fórmula matemática, intentando corrección');
+                            // Intentar balancear añadiendo llaves faltantes al final
+                            const difference = openBraces - closeBraces;
+                            if (difference > 0) {
+                                content += '}'.repeat(difference);
+                            }
+                        }
+                        
+                        // Solo actualizar si hubo cambios
+                        if (content !== originalContent) {
+                            mathEl.innerHTML = content;
+                            console.log('Fórmula sqrt corregida:', originalContent, '->', content);
+                        }
+                    }
+                });
+                
+                // Re-procesar con MathJax si se hicieron correcciones
+                if (typeof MathJax !== "undefined" && MathJax.Hub) {
+                    setTimeout(() => {
+                        MathJax.Hub.Queue(["Typeset", MathJax.Hub, element]);
+                    }, 50);
+                }
+            },
+            
+            runTest: function() {
+                const results = document.getElementById('test-results');
+                results.innerHTML = '<h3>Ejecutando test...</h3>';
+                
+                // Simular casos problemáticos
+                const testContainer = document.createElement('div');
+                testContainer.innerHTML = `
+                    <div class="test-case after">
+                        <h4>Resultados del test:</h4>
+                        <div class="math">$$\\\\sqrt{25} = 5$$</div>
+                        <div class="math">$$sqrt{16} + 4$$</div>
+                        <div class="math">$$\\sqrt {9} = 3$$</div>
+                        <div class="math">$$\\sqrt{} = 0$$</div>
+                    </div>
+                `;
+                
+                results.appendChild(testContainer);
+                
+                // Aplicar corrección
+                setTimeout(() => {
+                    this.validateAndFixSqrtFormulas(testContainer);
+                    results.innerHTML += '<p class="text-success"><strong>Test completado. Revisa la consola para los logs de corrección.</strong></p>';
+                }, 100);
+            },
+            
+            manualFix: function() {
+                this.validateAndFixSqrtFormulas(document.body);
+                alert('Corrección manual aplicada. Revisa la consola para los detalles.');
+            }
+        };
+        
+        // Ejecutar corrección automática al cargar la página
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                testFunctions.validateAndFixSqrtFormulas(document.body);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

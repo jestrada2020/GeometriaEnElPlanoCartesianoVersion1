@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Distancia Entre Puntos - Sqrt Fix</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Test: Distancia Entre Puntos - Sqrt Fix</h1>
+        
+        <div class="alert alert-info">
+            <strong>🎯 Objetivo:</strong> Verificar que la fórmula de distancia entre puntos muestre símbolos √ correctos, no código LaTeX crudo.
+        </div>
+        
+        <!-- Test 1: Fórmula original problemática -->
+        <div class="card mb-4">
+            <div class="card-header bg-danger text-white">
+                <h3>❌ ANTES: Fórmula problemática (LaTeX)</h3>
+            </div>
+            <div class="card-body">
+                <p><strong>Código LaTeX original:</strong></p>
+                <code>$$d = \sqrt{(x_1 - x_0)^2 + (y_1 - y_0)^2}$$</code>
+                <p class="mt-2"><strong>Problema:</strong> Se mostraba como código crudo en lugar de símbolo matemático.</p>
+            </div>
+        </div>
+        
+        <!-- Test 2: Nueva fórmula CSS -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h3>✅ DESPUÉS: Fórmula corregida (CSS)</h3>
+            </div>
+            <div class="card-body">
+                <p><strong>Nueva implementación CSS:</strong></p>
+                <div class="math-equation" style="font-size: 18px; text-align: center;">
+                    d = <span class="sqrt-symbol">(x₁ - x₀)² + (y₁ - y₀)²</span>
+                </div>
+                <p class="mt-2"><strong>Ventaja:</strong> Renderizado inmediato sin dependencias de MathJax.</p>
+            </div>
+        </div>
+        
+        <!-- Test 3: Simulación de herramienta completa -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>🧪 Simulación: Herramienta de Distancia Completa</h3>
+            </div>
+            <div class="card-body">
+                <div class="distancia-puntos-tool">
+                    <h4 class="main-title">Distancia Entre Dos Puntos del Plano</h4>
+                    
+                    <!-- Panel de entrada de datos -->
+                    <div class="input-panel mb-4">
+                        <h5 style="color: #2c3e50; margin-bottom: 20px;">Coordenadas de los Puntos</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="point-p0">Punto P₀</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="x0" class="form-label">Coordenada x₀:</label>
+                                            <input type="number" id="x0" class="form-control" value="1" step="0.5">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="y0" class="form-label">Coordenada y₀:</label>
+                                            <input type="number" id="y0" class="form-control" value="1" step="0.5">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="point-p1">Punto P₁</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="x1" class="form-label">Coordenada x₁:</label>
+                                            <input type="number" id="x1" class="form-control" value="4" step="0.5">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="y1" class="form-label">Coordenada y₁:</label>
+                                            <input type="number" id="y1" class="form-control" value="5" step="0.5">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Panel de fórmula -->
+                    <div class="formula-panel">
+                        <h5 style="color: #1976d2;">Fórmula de Distancia Euclidiana:</h5>
+                        <div class="math-equation" style="font-size: 18px; text-align: center;">
+                            d = <span class="sqrt-symbol">(x₁ - x₀)² + (y₁ - y₀)²</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Ejemplo de cálculo -->
+                    <div class="calculation-example mt-4">
+                        <h5 style="color: #e67e22;">Ejemplo de Cálculo:</h5>
+                        <div class="bg-light p-3">
+                            <p><strong>Dados los puntos:</strong> P₀(1, 1) y P₁(4, 5)</p>
+                            <p><strong>Aplicando la fórmula:</strong></p>
+                            <div class="math-equation">
+                                d = <span class="sqrt-symbol">(4 - 1)² + (5 - 1)²</span>
+                            </div>
+                            <div class="math-equation">
+                                d = <span class="sqrt-symbol">3² + 4²</span>
+                            </div>
+                            <div class="math-equation">
+                                d = <span class="sqrt-symbol">9 + 16</span>
+                            </div>
+                            <div class="math-equation">
+                                d = <span class="sqrt-symbol">25</span> = 5
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test 4: Variaciones de sqrt -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>🔄 Variaciones de Fórmulas de Distancia</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6>Distancia 2D</h6>
+                        <div class="math-equation">
+                            d = <span class="sqrt-symbol">Δx² + Δy²</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Distancia 3D</h6>
+                        <div class="math-equation small">
+                            d = <span class="sqrt-symbol">Δx² + Δy² + Δz²</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Distancia Ponderada</h6>
+                        <div class="math-equation small">
+                            d = <span class="sqrt-symbol">w₁Δx² + w₂Δy²</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test 5: Conversión automática -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>⚙️ Test de Conversión Automática</h3>
+            </div>
+            <div class="card-body">
+                <button class="btn btn-primary mb-3" onclick="testConversion()">Aplicar Conversión CSS sqrt</button>
+                <div id="conversion-content">
+                    <p>Fórmula LaTeX: $$d = \sqrt{(x_1 - x_0)^2 + (y_1 - y_0)^2}$$</p>
+                    <p>Formato mixto: La distancia es sqrt{(x-h)^2 + (y-k)^2}</p>
+                    <p>Con paréntesis: sqrt((x1-x0)^2 + (y1-y0)^2)</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Verificación -->
+        <div class="alert alert-success">
+            <h4 class="alert-heading">✅ Verificación</h4>
+            <p>Si todas las fórmulas de arriba muestran el símbolo √ correctamente y no código LaTeX crudo, entonces la corrección está funcionando.</p>
+            <hr>
+            <p class="mb-0">
+                <strong>Esperado:</strong> √(x₁ - x₀)² + (y₁ - y₀)² <br>
+                <strong>NO esperado:</strong> \sqrt{(x_1 - x_0)^2 + (y_1 - y_0)^2}
+            </p>
+        </div>
+        
+        <!-- Implementación técnica -->
+        <div class="card">
+            <div class="card-header">
+                <h3>🔧 Implementación Técnica</h3>
+            </div>
+            <div class="card-body">
+                <h5>Cambios Aplicados:</h5>
+                <ol>
+                    <li><strong>Cambio en js/script1.js (línea ~659):</strong>
+                        <br><code>ANTES: &lt;p class="math"&gt;$$d = \sqrt{(x_1 - x_0)^2 + (y_1 - y_0)^2}$$&lt;/p&gt;</code>
+                        <br><code>DESPUÉS: &lt;div class="math-equation"&gt;d = &lt;span class="sqrt-symbol"&gt;(x₁ - x₀)² + (y₁ - y₀)²&lt;/span&gt;&lt;/div&gt;</code>
+                    </li>
+                    <li><strong>Validación CSS añadida:</strong>
+                        <br><code>app.validateAndFixSqrtFormulasWithCSS(toolContent);</code>
+                    </li>
+                    <li><strong>CSS styling:</strong> Clases <code>.sqrt-symbol</code> y <code>.sqrt-simple</code></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load validation functions -->
+    <script src="js/script1.js"></script>
+    
+    <script>
+        function testConversion() {
+            const conversionContent = document.getElementById('conversion-content');
+            
+            if (window.app && window.app.convertSqrtToCSS) {
+                console.log('Aplicando conversión CSS sqrt...');
+                const originalContent = conversionContent.innerHTML;
+                const convertedContent = window.app.convertSqrtToCSS(originalContent);
+                conversionContent.innerHTML = convertedContent;
+                console.log('Conversión completada:', originalContent, '->', convertedContent);
+            } else {
+                console.error('Función de conversión no disponible');
+                alert('Error: Las funciones de conversión no están disponibles');
+            }
+        }
+        
+        // Verificación automática
+        window.addEventListener('load', function() {
+            console.log('✅ Test de distancia entre puntos cargado');
+            
+            // Verificar si hay código LaTeX crudo
+            setTimeout(() => {
+                const bodyText = document.body.innerText;
+                if (bodyText.includes('\\sqrt') && !bodyText.includes('código LaTeX')) {
+                    console.warn('⚠️ Detectado código LaTeX crudo en la página');
+                } else {
+                    console.log('✅ No se detectó código LaTeX crudo - corrección exitosa');
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

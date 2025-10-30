@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Coordenadas Paramétricas - Solución Definitiva</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            chtml: {
+                displayAlign: 'center',
+                displayIndent: '2em'
+            }
+        };
+    </script>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="text-center mb-4">Test Coordenadas Paramétricas - Solución Definitiva</h1>
+                
+                <div class="alert alert-info">
+                    <h4>Formatos Probados:</h4>
+                    <p>Este test verifica que las coordenadas paramétricas se rendericen correctamente con la nueva función global mejorada.</p>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Círculo</h5>
+                            </div>
+                            <div class="card-body">
+                                <h6>Ecuación:</h6>
+                                <div id="ecuacion-circulo">
+                                    $$x^2 + y^2 = 25$$
+                                </div>
+                                <h6>Coordenadas Paramétricas:</h6>
+                                <div id="parametricas-circulo">
+                                    $$\left\{\begin{array}{l}
+                                        x = 5\cos(t) \\
+                                        y = 5\sin(t)
+                                    \end{array}\right.$$
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Elipse</h5>
+                            </div>
+                            <div class="card-body">
+                                <h6>Ecuación:</h6>
+                                <div id="ecuacion-elipse">
+                                    $$\frac{x^2}{25} + \frac{y^2}{9} = 1$$
+                                </div>
+                                <h6>Coordenadas Paramétricas:</h6>
+                                <div id="parametricas-elipse">
+                                    $$\left\{\begin{array}{l}
+                                        x = 5\cos(t) \\
+                                        y = 3\sin(t)
+                                    \end{array}\right.$$
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Hipérbola</h5>
+                            </div>
+                            <div class="card-body">
+                                <h6>Ecuación:</h6>
+                                <div id="ecuacion-hiperbola">
+                                    $$\frac{x^2}{9} - \frac{y^2}{16} = 1$$
+                                </div>
+                                <h6>Coordenadas Paramétricas:</h6>
+                                <div id="parametricas-hiperbola">
+                                    $$\left\{\begin{array}{l}
+                                        x = 3\cosh(t) \\
+                                        y = 4\sinh(t)
+                                    \end{array}\right.$$
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Test Dinámico</h5>
+                            </div>
+                            <div class="card-body">
+                                <button class="btn btn-primary" onclick="testDynamicUpdate()">Actualizar Coordenadas Dinámicamente</button>
+                                <div class="mt-3">
+                                    <h6>Resultado dinámico:</h6>
+                                    <div id="resultado-dinamico">
+                                        <!-- Se llenará dinámicamente -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="alert alert-secondary">
+                            <h6>Estado de MathJax:</h6>
+                            <div id="mathjax-status">Cargando...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script1.js"></script>
+    <script>
+        // Función para probar actualización dinámica
+        function testDynamicUpdate() {
+            const elemento = document.getElementById('resultado-dinamico');
+            const r = Math.floor(Math.random() * 10) + 1;
+            const h = Math.floor(Math.random() * 5);
+            const k = Math.floor(Math.random() * 5);
+            
+            const hParam = h === 0 ? '' : (h > 0 ? ` + ${h}` : ` - ${Math.abs(h)}`);
+            const kParam = k === 0 ? '' : (k > 0 ? ` + ${k}` : ` - ${Math.abs(k)}`);
+            
+            const parametricas = `\\left\\{\\begin{array}{l}
+                x = ${r}\\cos(t)${hParam} \\\\
+                y = ${r}\\sin(t)${kParam}
+            \\end{array}\\right.`;
+            
+            elemento.innerHTML = `$$${parametricas}$$`;
+            
+            // Usar la función global mejorada
+            if (typeof app !== 'undefined' && app.reprocessMathJaxGlobal) {
+                setTimeout(() => {
+                    app.reprocessMathJaxGlobal([elemento]);
+                }, 100);
+            }
+        }
+        
+        // Verificar estado de MathJax
+        function checkMathJaxStatus() {
+            const statusElement = document.getElementById('mathjax-status');
+            if (typeof MathJax !== 'undefined') {
+                statusElement.innerHTML = `
+                    <strong>✅ MathJax cargado correctamente</strong><br>
+                    Versión: ${MathJax.version || 'Desconocida'}<br>
+                    Tipo: ${MathJax.Hub ? 'v2.x' : 'v3.x'}
+                `;
+                statusElement.className = 'text-success';
+            } else {
+                statusElement.innerHTML = '<strong>❌ MathJax no está disponible</strong>';
+                statusElement.className = 'text-danger';
+            }
+        }
+        
+        // Verificar cada segundo hasta que MathJax esté disponible
+        const checkInterval = setInterval(() => {
+            checkMathJaxStatus();
+            if (typeof MathJax !== 'undefined') {
+                clearInterval(checkInterval);
+                // Forzar renderizado inicial
+                setTimeout(() => {
+                    if (typeof app !== 'undefined' && app.reprocessMathJaxGlobal) {
+                        app.reprocessMathJaxGlobal();
+                    }
+                }, 500);
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
